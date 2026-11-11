@@ -5,7 +5,7 @@ Run from anywhere:   python tools/build.py
 
 Reads:   src/site.css, src/game.js, src/pages/*.html (the text under each game)
 Writes:  index.html, hard.html, easy.html, animals.html, food.html, sports.html,
-         thanksgiving.html, christmas.html,
+         the eight holiday pages (halloween.html, christmas.html, ...),
          embed.html, assets/game.js, sw.js, sitemap.xml
 
 The generated files are what Vercel serves. Edit the files in src/ (and the page
@@ -39,6 +39,28 @@ CLASSIC = {
     'pool': 'all', 'rampAt': 10, 'rampBase': 4, 'rampMax': 8,
     'daily': True, 'bestKey': 'clickThePair.best', 'legacyBestKey': 'tapThePair.best',
 }
+
+def holiday(slug, key, icon, name, blurb, things, description, tagline):
+    """A holiday board page. 'key' names its emoji set (THEMES) and date range (SEASONS) in src/game.js."""
+    article = 'an' if name[0] in 'AEIOU' else 'a'
+    return {
+        'file': f'{slug}.html', 'path': f'{slug}.html',
+        'nav': (icon, name, blurb), 'nav_group': 'holiday', 'season': key,
+        'title': f'{name} Emoji Matching Game | Click the Pair',
+        'description': description,
+        'og_title': f'{name} Emoji Matching Game',
+        'og_description': f'Find the matching pair among {things} in 60 seconds. Free to play in your browser.',
+        'h1': f'{name} Emoji Matching Game',
+        'tagline': tagline,
+        'start_title': f'{name} Board',
+        'start_text': f'Every tile is {article} {name} emoji. Find the matching pair in 60 seconds.',
+        'hint': HINT_PENALTY,
+        'game_name': f'Click the Pair: {name}',
+        'game_description': f'{article.capitalize()} {name} emoji matching game: find the one matching pair of {things} in 60 seconds.',
+        'config': dict(CLASSIC, mode=key, name=f'Click the Pair ({name})', label=f'{name} board',
+                       pool=key, rampAt=None, daily=False, bestKey=f'clickThePair.best.{key}', legacyBestKey=None),
+    }
+
 
 # Every game page. 'nav' is the card in "More Ways to Play"; pages without it are not listed.
 PAGES = [
@@ -152,6 +174,37 @@ PAGES = [
                        pool='games', rampAt=None, daily=False,
                        bestKey='clickThePair.best.sports', legacyBestKey=None),
     },
+    # Holiday boards, in calendar order. Each one only shows in the menus while it is in season.
+    holiday('new-years', 'newyear', '🥳', "New Year's", 'Fireworks, party hats and countdowns',
+            'fireworks, party poppers and countdown clocks',
+            ("A free New Year's game: find the matching pair among fireworks, confetti and countdown clocks "
+             'before the timer runs out. Play while you wait for midnight.'),
+            'Fireworks, confetti and countdowns. One matching pair.'),
+    holiday('valentines-day', 'valentines', '💘', "Valentine's Day", 'Hearts, roses and chocolates',
+            'hearts, roses and chocolates',
+            ("A free Valentine's Day game: find the matching pair among hearts, roses, chocolates and love "
+             'letters before the 60-second timer runs out. No download needed.'),
+            'Hearts, roses and chocolates. One matching pair.'),
+    holiday('st-patricks-day', 'stpatricks', '🍀', "St. Patrick's Day", 'Clovers, rainbows and pots of gold',
+            'four-leaf clovers, rainbows and pots of gold',
+            ("A free St. Patrick's Day game: find the matching pair among clovers, rainbows and bags of gold "
+             'on a board full of green before the 60-second timer runs out.'),
+            'Clovers, rainbows and gold. One matching pair.'),
+    holiday('easter', 'easter', '🐣', 'Easter', 'Bunnies, chicks and eggs',
+            'bunnies, chicks, eggs and spring flowers',
+            ('A free Easter game: find the matching pair among bunnies, chicks, eggs and spring flowers '
+             'before the 60-second timer runs out. Fun for the whole family.'),
+            'Bunnies, chicks and eggs. One matching pair.'),
+    holiday('fourth-of-july', 'july4', '🎆', 'Fourth of July', 'Fireworks, hot dogs and Lady Liberty',
+            'fireworks, cookout food and the Statue of Liberty',
+            ('A free Fourth of July game: find the matching pair among fireworks, hot dogs, burgers and the '
+             'Statue of Liberty before the 60-second timer runs out.'),
+            'Fireworks and cookout food. One matching pair.'),
+    holiday('halloween', 'halloween', '🎃', 'Halloween', 'Pumpkins, ghosts and bats',
+            'pumpkins, ghosts, bats and candy',
+            ('A free Halloween game: find the matching pair among pumpkins, ghosts, bats, vampires and candy '
+             'before the 60-second timer runs out. A quick, spooky party game.'),
+            'Pumpkins, ghosts and candy. One matching pair.'),
     {
         'file': 'thanksgiving.html', 'path': 'thanksgiving.html',
         'nav': ('🦃', 'Thanksgiving', 'Turkey, pie and fall leaves'), 'nav_group': 'holiday', 'season': 'thanksgiving',

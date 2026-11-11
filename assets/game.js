@@ -53,6 +53,12 @@
   const ALL = [...seen];
   // Holiday sets live outside GROUPS so they never change the classic or daily boards.
   const THEMES = {
+    newyear: '🎉 🎊 🥳 🎆 🎇 ✨ ⏰ ⌛ 🌟 📅 🎈 🎶 🎤 🕺 💃 🎩 👑 🌃 🍇 🧨',
+    valentines: '💖 💘 💝 💌 💐 🌹 🍫 🧸 💍 💋 😍 🍓 🍰 🎀 🦢 🌷 🎁 🍒 💄 🍬',
+    stpatricks: '🍀 🌈 💰 🎩 🥔 🐍 🎻 🍞 🥬 🥦 🥒 🍏 💚 🐸 🏰 🐑 🧚 🎉 🥁 👢',
+    easter: '🐣 🐥 🐰 🐇 🥚 🌷 🌸 🌼 🧺 🍫 🍬 🥕 🦋 🐑 🌱 🐝 🎀 🌈 🐞 🍭',
+    july4: '🎆 🎇 🧨 🗽 🦅 🍔 🌭 🍉 🌽 🥧 🍦 🍗 🎈 ⭐ 🎉 🥤 🔥 🧢 ⚾ 🍟',
+    halloween: '🎃 👻 🦇 💀 🧙 🧛 🧟 🍬 🍭 🍫 🌕 🦉 👽 🤡 👹 🧹 🔮 🐺 🌙 🎭',
     thanksgiving: '🦃 🥧 🌽 🍁 🍂 🥔 🍠 🥘 🍎 🍐 🍇 🥕 🍞 🧀 🍗 🥜 🌰 🍯 🏈 🥗',
     christmas: '🎄 🎅 🤶 ⛄ 🦌 🎁 🔔 🌟 🧦 🍪 🥛 🍬 🎀 🧣 🧤 🛷 👼 🍫 🎶 🧸'
   };
@@ -759,11 +765,27 @@
     const first = new Date(year, 10, 1).getDay();
     return new Date(year, 10, 1 + (4 - first + 7) % 7 + 21);
   }
+  // Western Easter Sunday (the Anonymous Gregorian algorithm)
+  function easterDay(y) {
+    const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4;
+    const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const n = h + l - 7 * m + 114;
+    return new Date(y, Math.floor(n / 31) - 1, n % 31 + 1);
+  }
   function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
-  // Each season's first and last day, inclusive, in the player's local time
+  // Each season's first and last day, inclusive, in the player's local time.
+  // A season may run into the next year (New Year's), so both this year's and last year's ranges are checked.
   const SEASONS = {
-    thanksgiving: y => [new Date(y, 10, 1), addDays(thanksgivingDay(y), 1)],   // Nov 1 to Black Friday
-    christmas: y => [addDays(thanksgivingDay(y), 2), new Date(y, 11, 31)]      // the weekend after, to Dec 31
+    newyear: y => [new Date(y, 11, 26), new Date(y + 1, 0, 5)],                  // Dec 26 to Jan 5
+    valentines: y => [new Date(y, 1, 1), new Date(y, 1, 14)],                    // Feb 1 to Feb 14
+    stpatricks: y => [new Date(y, 2, 1), new Date(y, 2, 17)],                    // Mar 1 to Mar 17
+    easter: y => [addDays(easterDay(y), -14), addDays(easterDay(y), 1)],         // two weeks before, to Easter Monday
+    july4: y => [new Date(y, 5, 20), new Date(y, 6, 5)],                         // Jun 20 to Jul 5
+    halloween: y => [new Date(y, 9, 1), new Date(y, 9, 31)],                     // Oct 1 to Oct 31
+    thanksgiving: y => [new Date(y, 10, 1), addDays(thanksgivingDay(y), 1)],     // Nov 1 to Black Friday
+    christmas: y => [addDays(thanksgivingDay(y), 2), new Date(y, 11, 25)]        // the weekend after, to Dec 25
   };
   function seasonToday() {
     // Local testing only: ?today=2026-12-05 pretends it is that date
@@ -773,8 +795,11 @@
     return fake ? new Date(+fake[1], fake[2] - 1, +fake[3]) : new Date(now.getFullYear(), now.getMonth(), now.getDate());
   }
   function inSeason(name, day) {
-    const range = SEASONS[name] && SEASONS[name](day.getFullYear());
-    return !!range && day >= range[0] && day <= range[1];
+    if (!SEASONS[name]) return false;
+    return [day.getFullYear(), day.getFullYear() - 1].some(y => {
+      const range = SEASONS[name](y);
+      return day >= range[0] && day <= range[1];
+    });
   }
 
   const seasonal = $('seasonal');
