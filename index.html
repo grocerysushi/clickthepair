@@ -63,11 +63,8 @@
   --bad: #c81e1e;
   --bad-soft: #fde0e0;
   --overlay: rgba(255, 253, 249, .95);
-  --ad-bg: #ebe5d8;
   --soft-shadow: 0 10px 24px rgba(27, 33, 48, .10);
 
-  --ad-gap: 150px;          /* minimum distance between any ad and the tiles */
-  --ad-side-h: 250px;       /* change to 600px for a 300x600 sidebar unit */
   --board-max: 560px;
 
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -94,7 +91,6 @@
     --bad: #ff8080;
     --bad-soft: #4a1f24;
     --overlay: rgba(26, 31, 43, .95);
-    --ad-bg: #1c212d;
     --soft-shadow: 0 10px 24px rgba(0, 0, 0, .35);
   }
 }
@@ -124,38 +120,10 @@ a:focus-visible, button:focus-visible {
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* ---------- Ad slots: fixed sizes so nothing shifts when ads load ---------- */
-.ad { display: flex; justify-content: center; }
-.ad__box {
-  position: relative;
-  flex: none;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  background: var(--ad-bg);
-  border: 1px dashed var(--line);
-  color: var(--muted);
-  font-size: .6875rem; letter-spacing: .14em; text-transform: uppercase;
-}
-/* An AdSense <ins> pasted into a slot fills the reserved box exactly */
-.ad__box > ins.adsbygoogle { display: block; width: 100%; height: 100%; }
-
-.ad--top { padding-top: 8px; }
-#ad-top-banner     { width: 320px; height: 50px; }
-#ad-bottom-banner  { width: 320px; height: 100px; }
-#ad-sidebar        { width: 300px; height: var(--ad-side-h); }
-#ad-in-content     { width: 300px; height: 250px; }
-.ad--side { display: none; }
-.ad--content { margin: 40px 0; }
-
-@media (min-width: 768px) {
-  #ad-top-banner, #ad-bottom-banner { width: 728px; height: 90px; }
-}
-
 /* ---------- Header ---------- */
 .site-header {
-  min-height: 96px;               /* part of the 150px buffer between the top ad and the tiles */
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 10px 16px;
+  padding: 22px 16px 16px;
   text-align: center;
 }
 h1 {
@@ -180,24 +148,10 @@ h1 {
   padding: 0 8px;
 }
 @media (min-width: 400px)  { .stage { padding: 0 12px; } }
-/* Wide screens: the game stays centered on the page and the sidebar ad sits in the
-   right-hand margin, 150px clear of the card. Below 1420px there is no room for
-   both, so the sidebar is hidden and the game keeps the center. */
-@media (min-width: 1420px) {
-  :root { --board-max: min(560px, calc(100vw - 980px)); }
-  .stage {
-    grid-template-columns: minmax(0, 1fr) var(--board-w) minmax(0, 1fr);
-    max-width: none;
-    padding: 0 24px;
-  }
-  .game { grid-column: 2; }
-  .ad--side { display: flex; grid-column: 3; justify-self: start; margin-left: var(--ad-gap); }
-}
-
 /* Board width: shrinks on short screens so the whole board stays in view; never below 64px tiles */
-.stage { --board-w: max(296px, min(var(--board-max), calc((100vh - 300px) * 4 / 3))); }
+.stage { --board-w: max(296px, min(var(--board-max), calc((100vh - 230px) * 4 / 3))); }
 @supports (height: 100svh) {
-  .stage { --board-w: max(296px, min(var(--board-max), calc((100svh - 300px) * 4 / 3))); }
+  .stage { --board-w: max(296px, min(var(--board-max), calc((100svh - 230px) * 4 / 3))); }
 }
 
 .game {
@@ -390,15 +344,14 @@ h1 {
 }
 .btn--ghost:active { box-shadow: inset 0 0 0 2px var(--accent), 0 1px 0 var(--accent-edge); }
 
-/* Buffer that keeps the bottom banner at least 150px below the tiles */
-.ad-buffer {
-  min-height: var(--ad-gap);
-  display: flex; align-items: flex-start; justify-content: center;
+/* Hint line under the game */
+.hint {
+  display: flex; justify-content: center;
   padding: 18px 16px 0;
   text-align: center;
   color: var(--muted); font-size: .875rem;
 }
-.ad-buffer p { margin: 0; max-width: 46ch; }
+.hint p { margin: 0; max-width: 46ch; }
 
 /* ---------- Content ---------- */
 .content {
@@ -520,11 +473,6 @@ h1 {
 
 <body>
 
-<!-- AD SLOT: top-banner (728x90 desktop, 320x50 mobile) -->
-<aside class="ad ad--top" aria-label="Advertisement">
-  <div id="ad-top-banner" class="ad__box"><span class="ad__placeholder">Advertisement</span></div>
-</aside>
-
 <header class="site-header">
   <h1>Click the Pair – Free Emoji Matching Game</h1>
   <p class="tagline">Twelve tiles, one matching pair, 60 seconds on the clock.</p>
@@ -593,22 +541,12 @@ h1 {
         <noscript><p style="text-align:center;margin:12px 0 4px">Click the Pair needs JavaScript turned on to play.</p></noscript>
       </div>
 
-      <!-- AD SLOT: sidebar (300x250, wide screens only; hidden below 1420px so the game stays centered) -->
-      <aside class="ad ad--side" aria-label="Advertisement">
-        <div id="ad-sidebar" class="ad__box"><span class="ad__placeholder">Advertisement</span></div>
-      </aside>
-
     </div>
 
-    <div class="ad-buffer">
+    <div class="hint">
       <p>A wrong click costs 2 seconds. On a keyboard, move with Tab or the arrow keys and press Enter or Space to pick a tile.</p>
     </div>
   </section>
-
-  <!-- AD SLOT: bottom-banner (728x90 desktop, 320x100 mobile) -->
-  <aside class="ad ad--bottom" aria-label="Advertisement">
-    <div id="ad-bottom-banner" class="ad__box"><span class="ad__placeholder">Advertisement</span></div>
-  </aside>
 
   <article class="content">
 
@@ -618,11 +556,6 @@ h1 {
       <p>Each round lasts 60 seconds. Every pair you find adds one point to your score. If you click a tile that is not part of the pair, it shakes red and you lose 2 seconds, so guessing costs you. When the timer reaches zero you see your score and your best score, and you can play again or share your result with a friend.</p>
       <p>The game works with touch, a mouse or a keyboard. On a keyboard, use Tab or the arrow keys to move between tiles and press Enter or Space to select one.</p>
     </section>
-
-    <!-- AD SLOT: in-content (300x250) -->
-    <aside class="ad ad--content" aria-label="Advertisement">
-      <div id="ad-in-content" class="ad__box"><span class="ad__placeholder">Advertisement</span></div>
-    </aside>
 
     <section id="tips">
       <h2>Tips to Find Pairs Faster</h2>
