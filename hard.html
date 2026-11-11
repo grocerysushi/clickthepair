@@ -430,7 +430,14 @@ h1 {
 }
 
 /* ---------- Under the board: stats link ---------- */
-.game-links { display: flex; justify-content: center; padding-top: 10px; }
+.game-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; padding-top: 10px; }
+.season-promo {
+  display: inline-flex; align-items: center; min-height: 36px; padding: 6px 14px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: .875rem; font-weight: 800; text-decoration: none;
+}
+.season-promo[hidden] { display: none; }
+@media (hover: hover) { .season-promo:hover { text-decoration: underline; } }
 
 /* ---------- Stats panel ---------- */
 .stats {
@@ -465,6 +472,10 @@ h1 {
 /* Six cards: three across on wide screens, two across on phones, so there is never a lone card on its own row */
 .modes ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
 @media (min-width: 720px) { .modes ul { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; } }
+.modes__seasonal[hidden], .modes li[hidden] { display: none; }
+.modes h3 { margin: 28px 0 12px; font: 800 1.0625rem/1.3 var(--font-display); text-align: center; }
+/* Two holiday cards: two across at every width, kept to the width of two regular cards on wide screens */
+.modes ul.modes__holiday { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 632px; margin: 0 auto; }
 .mode-card {
   position: relative;
   display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
@@ -708,7 +719,7 @@ h1 {
 
     </div>
 
-    <div class="game-links"><button type="button" class="link-btn" id="stats-btn">📊 Your stats</button></div>
+    <div class="game-links"><a class="season-promo" id="season-promo" hidden></a><button type="button" class="link-btn" id="stats-btn">📊 Your stats</button></div>
     <div class="hint">
       <p>A wrong click costs 2 seconds. On a keyboard, move with Tab or the arrow keys and press Enter or Space to pick a tile.</p>
     </div>
@@ -724,6 +735,13 @@ h1 {
       <li><a class="mode-card" href="/food.html"><span class="mode-card__icon" aria-hidden="true">🍓</span><span class="mode-card__text"><strong>Food</strong><span>Fruit, snacks and treats</span></span></a></li>
       <li><a class="mode-card" href="/sports.html"><span class="mode-card__icon" aria-hidden="true">⚽</span><span class="mode-card__text"><strong>Sports &amp; Games</strong><span>Balls, music and party games</span></span></a></li>
     </ul>
+    <div class="modes__seasonal" id="seasonal" hidden>
+    <h3>Holiday Boards</h3>
+    <ul class="modes__holiday">
+      <li data-season="thanksgiving"><a class="mode-card" href="/thanksgiving.html"><span class="mode-card__icon" aria-hidden="true">🦃</span><span class="mode-card__text"><strong>Thanksgiving</strong><span>Turkey, pie and fall leaves</span></span></a></li>
+      <li data-season="christmas"><a class="mode-card" href="/christmas.html"><span class="mode-card__icon" aria-hidden="true">🎄</span><span class="mode-card__text"><strong>Christmas</strong><span>Santa, presents and snowmen</span></span></a></li>
+    </ul>
+    </div>
   </nav>
 
   <article class="content">
@@ -790,7 +808,7 @@ h1 {
 </dialog>
 
 <script type="application/json" id="game-config">{"mode": "hard", "name": "Click the Pair Hard Mode", "label": "Hard Mode", "tiles": 20, "cols": 4, "seconds": 60, "penalty": 2, "pool": "all", "rampAt": 0, "rampBase": 6, "rampMax": 12, "daily": false, "bestKey": "clickThePair.best.hard", "legacyBestKey": null, "url": "https://clickthepair.com/hard.html"}</script>
-<script src="/assets/game.js?v=845f8eef9c" defer></script>
+<script src="/assets/game.js?v=c810458bb5" defer></script>
 
 </body>
 </html>

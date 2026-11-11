@@ -51,7 +51,14 @@
   const seen = new Set();
   const groups = GROUPS.map(g => g.split(' ').filter(e => e && !seen.has(e) && seen.add(e)));
   const ALL = [...seen];
-  const POOL = CFG.pool === 'all' ? ALL : (groups[GROUP_NAMES.indexOf(CFG.pool)] || ALL);
+  // Holiday sets live outside GROUPS so they never change the classic or daily boards.
+  const THEMES = {
+    thanksgiving: '🦃 🥧 🌽 🍁 🍂 🥔 🍠 🥘 🍎 🍐 🍇 🥕 🍞 🧀 🍗 🥜 🌰 🍯 🏈 🥗',
+    christmas: '🎄 🎅 🤶 ⛄ 🦌 🎁 🔔 🌟 🧦 🍪 🥛 🍬 🎀 🧣 🧤 🛷 👼 🍫 🎶 🧸'
+  };
+  const POOL = CFG.pool === 'all' ? ALL
+    : THEMES[CFG.pool] ? THEMES[CFG.pool].split(' ')
+    : (groups[GROUP_NAMES.indexOf(CFG.pool)] || ALL);
 
   const $ = id => document.getElementById(id);
   const gameCard = $('game-card');
@@ -743,6 +750,55 @@
         embedCode.select();
       });
     });
+  }
+
+  /* ---------- holiday boards: switch on and off by date, no redeploy needed ---------- */
+
+  // US Thanksgiving: the fourth Thursday of November
+  function thanksgivingDay(year) {
+    const first = new Date(year, 10, 1).getDay();
+    return new Date(year, 10, 1 + (4 - first + 7) % 7 + 21);
+  }
+  function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+  // Each season's first and last day, inclusive, in the player's local time
+  const SEASONS = {
+    thanksgiving: y => [new Date(y, 10, 1), addDays(thanksgivingDay(y), 1)],   // Nov 1 to Black Friday
+    christmas: y => [addDays(thanksgivingDay(y), 2), new Date(y, 11, 31)]      // the weekend after, to Dec 31
+  };
+  function seasonToday() {
+    // Local testing only: ?today=2026-12-05 pretends it is that date
+    const fake = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) &&
+      /^(\d{4})-(\d{2})-(\d{2})$/.exec(new URLSearchParams(location.search).get('today') || '');
+    const now = new Date();
+    return fake ? new Date(+fake[1], fake[2] - 1, +fake[3]) : new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  }
+  function inSeason(name, day) {
+    const range = SEASONS[name] && SEASONS[name](day.getFullYear());
+    return !!range && day >= range[0] && day <= range[1];
+  }
+
+  const seasonal = $('seasonal');
+  if (seasonal) {
+    const day = seasonToday();
+    let anyShown = false;
+    let promoCard = null;
+    seasonal.querySelectorAll('li[data-season]').forEach(li => {
+      const card = li.querySelector('a');
+      const current = card.getAttribute('aria-current') === 'page';
+      const live = inSeason(li.dataset.season, day);
+      li.hidden = !(live || current);
+      if (!li.hidden) anyShown = true;
+      if (live && !current && !promoCard) promoCard = card;
+    });
+    seasonal.hidden = !anyShown;
+    // Point the start screen at the holiday board that is in season
+    const promo = $('season-promo');
+    if (promo && promoCard) {
+      promo.href = promoCard.getAttribute('href');
+      promo.textContent = promoCard.querySelector('.mode-card__icon').textContent + ' Try the ' +
+        promoCard.querySelector('strong').textContent + ' board';
+      promo.hidden = false;
+    }
   }
 
   /* ---------- offline play ---------- */

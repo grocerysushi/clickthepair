@@ -5,6 +5,7 @@ Run from anywhere:   python tools/build.py
 
 Reads:   src/site.css, src/game.js, src/pages/*.html (the text under each game)
 Writes:  index.html, hard.html, easy.html, animals.html, food.html, sports.html,
+         thanksgiving.html, christmas.html,
          embed.html, assets/game.js, sw.js, sitemap.xml
 
 The generated files are what Vercel serves. Edit the files in src/ (and the page
@@ -152,6 +153,48 @@ PAGES = [
                        bestKey='clickThePair.best.sports', legacyBestKey=None),
     },
     {
+        'file': 'thanksgiving.html', 'path': 'thanksgiving.html',
+        'nav': ('🦃', 'Thanksgiving', 'Turkey, pie and fall leaves'), 'nav_group': 'holiday', 'season': 'thanksgiving',
+        'title': 'Thanksgiving Emoji Matching Game | Click the Pair',
+        'description': ('A free Thanksgiving game: find the matching pair among turkeys, pies and fall leaves '
+                        'before the 60-second timer runs out. Fun for the whole family.'),
+        'og_title': 'Thanksgiving Emoji Matching Game',
+        'og_description': ('Find the matching pair among turkeys, pies and fall leaves in 60 seconds. '
+                           'Free to play in your browser.'),
+        'h1': 'Thanksgiving Emoji Matching Game',
+        'tagline': 'Turkey, pie and fall leaves. One matching pair.',
+        'start_title': 'Thanksgiving Board',
+        'start_text': 'Every tile is a Thanksgiving emoji. Find the matching pair in 60 seconds.',
+        'hint': HINT_PENALTY,
+        'game_name': 'Click the Pair: Thanksgiving',
+        'game_description': ('A Thanksgiving emoji matching game: find the one matching pair of turkeys, pies, '
+                             'harvest foods and fall leaves in 60 seconds.'),
+        'config': dict(CLASSIC, mode='thanksgiving', name='Click the Pair (Thanksgiving)',
+                       label='Thanksgiving board', pool='thanksgiving', rampAt=None, daily=False,
+                       bestKey='clickThePair.best.thanksgiving', legacyBestKey=None),
+    },
+    {
+        'file': 'christmas.html', 'path': 'christmas.html',
+        'nav': ('🎄', 'Christmas', 'Santa, presents and snowmen'), 'nav_group': 'holiday', 'season': 'christmas',
+        'title': 'Christmas Emoji Matching Game – Free Online | Click the Pair',
+        'description': ('A free Christmas game: find the matching pair among Santas, trees, presents and '
+                        'snowmen before the 60-second timer runs out. Great for holiday parties.'),
+        'og_title': 'Christmas Emoji Matching Game',
+        'og_description': ('Find the matching pair among Santas, trees and presents in 60 seconds. '
+                           'Free to play in your browser.'),
+        'h1': 'Christmas Emoji Matching Game',
+        'tagline': 'Santa, presents and snowmen. One matching pair.',
+        'start_title': 'Christmas Board',
+        'start_text': 'Every tile is a Christmas emoji. Find the matching pair in 60 seconds.',
+        'hint': HINT_PENALTY,
+        'game_name': 'Click the Pair: Christmas',
+        'game_description': ('A Christmas emoji matching game: find the one matching pair of Santas, trees, '
+                             'presents and snowmen in 60 seconds.'),
+        'config': dict(CLASSIC, mode='christmas', name='Click the Pair (Christmas)',
+                       label='Christmas board', pool='christmas', rampAt=None, daily=False,
+                       bestKey='clickThePair.best.christmas', legacyBestKey=None),
+    },
+    {
         'file': 'embed.html', 'path': 'embed.html', 'embed': True,
         'title': 'Click the Pair – Emoji Matching Game',
         'description': 'Click the Pair, a free emoji matching game, embedded on another site.',
@@ -192,6 +235,9 @@ for line in re.findall(r"'([^']*)'", _groups_src):
     _seen.update(g)
     GROUPS.append(g)
 ALL = [e for g in GROUPS for e in g]
+# Holiday sets (kept apart from GROUPS in the game script)
+_themes_src = re.search(r'const THEMES = \{(.*?)\};', GAME_JS, re.S).group(1)
+THEMES = {name: emojis.split(' ') for name, emojis in re.findall(r"(\w+): '([^']*)'", _themes_src)}
 
 
 def placeholder_board(cfg):
@@ -199,7 +245,8 @@ def placeholder_board(cfg):
     n = cfg['tiles']
     if cfg['mode'] == 'classic':
         return ['🐶', '🍉', '🚀', '🎲', '🌈', '🍉', '🔑', '🐙', '🎸', '🌵', '🍩', '⚓'][:n]
-    pool = ALL if cfg['pool'] == 'all' else GROUPS[GROUP_NAMES.index(cfg['pool'])]
+    pool = (ALL if cfg['pool'] == 'all' else THEMES[cfg['pool']] if cfg['pool'] in THEMES
+            else GROUPS[GROUP_NAMES.index(cfg['pool'])])
     step = max(1, len(pool) // (n - 1)) if cfg['pool'] == 'all' else 1
     picked = [pool[(i * step) % len(pool)] for i in range(n - 1)]
     board = picked[:]
@@ -307,19 +354,28 @@ def structured_data(page, url, faqs):
 
 
 def modes_nav(current):
-    items = []
-    for p in PAGES:
-        if 'nav' not in p:
-            continue
-        icon, name, blurb = p['nav']
-        here = ' aria-current="page"' if p is current else ''
-        badge = '<span class="mode-card__here">Playing</span>' if p is current else ''
-        items.append(f'''      <li><a class="mode-card" href="/{p['path']}"{here}><span class="mode-card__icon" aria-hidden="true">{icon}</span><span class="mode-card__text"><strong>{E(name)}</strong><span>{E(blurb)}</span></span>{badge}</a></li>''')
+    def cards(group):
+        items = []
+        for p in PAGES:
+            if 'nav' not in p or p.get('nav_group') != group:
+                continue
+            icon, name, blurb = p['nav']
+            here = ' aria-current="page"' if p is current else ''
+            badge = '<span class="mode-card__here">Playing</span>' if p is current else ''
+            season = f''' data-season="{p['season']}"''' if p.get('season') else ''
+            items.append(f'''      <li{season}><a class="mode-card" href="/{p['path']}"{here}><span class="mode-card__icon" aria-hidden="true">{icon}</span><span class="mode-card__text"><strong>{E(name)}</strong><span>{E(blurb)}</span></span>{badge}</a></li>''')
+        return '\n'.join(items)
     return '''  <nav class="modes" aria-label="More ways to play">
     <h2>More Ways to Play</h2>
     <ul>
-''' + '\n'.join(items) + '''
+''' + cards(None) + '''
     </ul>
+    <div class="modes__seasonal" id="seasonal" hidden>
+    <h3>Holiday Boards</h3>
+    <ul class="modes__holiday">
+''' + cards('holiday') + '''
+    </ul>
+    </div>
   </nav>'''
 
 
@@ -336,6 +392,8 @@ def game_section(page):
     else:
         start_buttons = '              <button type="button" class="btn btn--big" id="start-btn">Start</button>'
         start_meta = 'New boards every round.'
+    # Filled in by the game script while a holiday board is in season
+    season_promo = '' if cfg.get('embed') else '<a class="season-promo" id="season-promo" hidden></a>'
     daily_results = '''
             <p class="result-best" id="daily-line" hidden></p>
             <p class="result-strip" id="daily-strip" hidden><span class="result-strip__blocks" id="strip-blocks" title="Pairs found in each 10 seconds" aria-hidden="true"></span><span id="strip-misses"></span></p>''' if daily else ''
@@ -397,7 +455,7 @@ def game_section(page):
 
     </div>
 
-    <div class="game-links"><button type="button" class="link-btn" id="stats-btn">📊 Your stats</button></div>
+    <div class="game-links">{season_promo}<button type="button" class="link-btn" id="stats-btn">📊 Your stats</button></div>
     <div class="hint">
       <p>{E(page['hint'])}</p>
     </div>
