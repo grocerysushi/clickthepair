@@ -287,7 +287,8 @@ def modes_nav(current):
             continue
         icon, name, blurb = p['nav']
         here = ' aria-current="page"' if p is current else ''
-        items.append(f'''      <li><a class="mode-card" href="/{p['path']}"{here}><span class="mode-card__icon" aria-hidden="true">{icon}</span><span class="mode-card__text"><strong>{E(name)}</strong><span>{E(blurb)}</span></span></a></li>''')
+        badge = '<span class="mode-card__here">Playing</span>' if p is current else ''
+        items.append(f'''      <li><a class="mode-card" href="/{p['path']}"{here}><span class="mode-card__icon" aria-hidden="true">{icon}</span><span class="mode-card__text"><strong>{E(name)}</strong><span>{E(blurb)}</span></span>{badge}</a></li>''')
     return '''  <nav class="modes" aria-label="More ways to play">
     <h2>More Ways to Play</h2>
     <ul>
