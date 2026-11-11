@@ -13,7 +13,7 @@
 </script>
 
 <title>Click the Pair – Free Emoji Matching Game | Play Online</title>
-<meta name="description" content="Play Click the Pair, a free online emoji matching game. Find the two matching emojis, beat the 60-second timer and set a high score. No download or sign-up.">
+<meta name="description" content="Play Click the Pair, a free emoji matching game. Find the matching pair before the 60-second timer runs out, then take the daily challenge. No download needed.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://clickthepair.com/">
 
@@ -321,7 +321,7 @@ h1 {
   font-size: .75rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
   vertical-align: 2px;
 }
-.share-note { margin: 0; min-height: 1.2em; font-size: .8125rem; line-height: 1.2; color: var(--muted); overflow-wrap: anywhere; }
+.share-note { margin: 0; font-size: .8125rem; line-height: 1.2; color: var(--muted); overflow-wrap: anywhere; }
 
 .btn {
   appearance: none; -webkit-appearance: none;
@@ -344,6 +344,26 @@ h1 {
   box-shadow: inset 0 0 0 2px var(--accent), 0 4px 0 var(--accent-edge);
 }
 .btn--ghost:active { box-shadow: inset 0 0 0 2px var(--accent), 0 1px 0 var(--accent-edge); }
+
+.overlay__meta { margin: 0; max-width: 34ch; font-size: .875rem; line-height: 1.35; color: var(--muted); font-variant-numeric: tabular-nums; }
+.result-best { font-variant-numeric: tabular-nums; }
+.result-strip { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .875rem; font-weight: 700; }
+.result-strip__blocks { font-family: var(--font-emoji); font-size: 1.125rem; line-height: 1; letter-spacing: 1px; }
+#results.is-daily #share-btn { order: -1; }
+.link-btn {
+  appearance: none; -webkit-appearance: none;
+  min-height: 32px; padding: 4px 10px;
+  border: 0; background: none;
+  color: var(--accent);
+  font: 700 .875rem/1.2 var(--font-body);
+  text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+@media (max-width: 399px) {
+  .overlay { gap: 6px; }
+  .overlay .btn { padding: 0 18px; }
+}
 
 /* Hint line under the game */
 .hint {
@@ -393,7 +413,10 @@ h1 {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": ["VideoGame", "WebApplication"],
+      "@type": [
+        "VideoGame",
+        "WebApplication"
+      ],
       "@id": "https://clickthepair.com/#game",
       "name": "Click the Pair",
       "url": "https://clickthepair.com/",
@@ -435,6 +458,14 @@ h1 {
         },
         {
           "@type": "Question",
+          "name": "What is the daily challenge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every day there is one set of Daily boards, the same for everyone. You get one try, your streak grows each day you play, and you can share your result with a colored strip that shows how quickly you found pairs. The daily resets at midnight in your time zone. Free play has unlimited rounds with new random boards."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "How is the score counted?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -459,10 +490,10 @@ h1 {
         },
         {
           "@type": "Question",
-          "name": "Is my best score saved?",
+          "name": "Are my scores and streak saved?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Your best score is stored in your browser on this device and is not sent anywhere. It may reset if you clear your browser data or play in a private window."
+            "text": "Your best score, your daily results and your streak are stored in your browser on this device and are not sent anywhere. They may reset if you clear your browser data or play in a private window."
           }
         }
       ]
@@ -496,7 +527,7 @@ h1 {
             <span class="penalty" id="penalty" aria-hidden="true">−2s</span>
           </div>
           <div class="stat">
-            <span class="stat__label">Best</span>
+            <span class="stat__label" id="best-label">Best</span>
             <span class="stat__value" id="best">0</span>
           </div>
         </div>
@@ -522,18 +553,25 @@ h1 {
           <div class="overlay" id="start-screen">
             <h2 class="overlay__title">Click the Pair</h2>
             <p class="overlay__text">Two tiles match. Find them and click both. You have 60 seconds.</p>
-            <button type="button" class="btn btn--big" id="start-btn">Start</button>
+            <div class="overlay__actions">
+              <button type="button" class="btn" id="daily-btn">Daily challenge</button>
+              <button type="button" class="btn btn--ghost" id="start-btn">Free play</button>
+            </div>
+            <p class="overlay__meta" id="start-meta">Same boards for everyone today. One try.</p>
           </div>
 
           <!-- Results card -->
           <div class="overlay" id="results" hidden>
-            <h2 class="overlay__title">Time’s up!</h2>
+            <h2 class="overlay__title" id="result-title">Time’s up!</h2>
             <p class="result-score"><strong id="final-score">0</strong> <span id="final-unit">pairs</span></p>
-            <p class="result-best">Best: <span id="final-best">0</span><span class="badge" id="new-best" hidden>New best</span></p>
+            <p class="result-best" id="result-best">Best: <span id="final-best">0</span><span class="badge" id="new-best" hidden>New best</span></p>
+            <p class="result-best" id="daily-line" hidden></p>
+            <p class="result-strip" id="daily-strip" hidden><span class="result-strip__blocks" id="strip-blocks" title="Pairs found in each 10 seconds" aria-hidden="true"></span><span id="strip-misses"></span></p>
             <div class="overlay__actions">
               <button type="button" class="btn" id="again-btn">Play Again</button>
               <button type="button" class="btn btn--ghost" id="share-btn">Share</button>
             </div>
+            <button type="button" class="link-btn" id="to-daily" hidden>Play today’s Daily</button>
             <p class="share-note" id="share-note" role="status"></p>
           </div>
         </div>
@@ -555,6 +593,7 @@ h1 {
       <h2>How to Play Click the Pair</h2>
       <p>Click the Pair is a quick emoji matching game you can play right in your browser. Press Start and a grid of twelve emoji tiles appears. Ten of the tiles are one of a kind, and exactly two are the same. Find the two matching emojis and click them both to score a point. A fresh grid appears straight away, so keep going.</p>
       <p>Each round lasts 60 seconds. Every pair you find adds one point to your score. If you click a tile that is not part of the pair, it shakes red and you lose 2 seconds, so guessing costs you. When the timer reaches zero you see your score and your best score, and you can play again or share your result with a friend.</p>
+      <p>There are two ways to play. The <strong>Daily challenge</strong> gives everyone the same set of boards each day, and you get one try. Play on consecutive days to build a streak, then share your result to see how your friends compare. <strong>Free play</strong> deals fresh random boards every round, as many times as you like.</p>
       <p>The game works with touch, a mouse or a keyboard. On a keyboard, use Tab or the arrow keys to move between tiles and press Enter or Space to select one.</p>
     </section>
 
@@ -584,6 +623,9 @@ h1 {
       <h3>Does it work on phones and tablets?</h3>
       <p>Yes. The game runs in any modern mobile browser on iPhone, iPad and Android. The tiles are sized for thumbs, and it also works with a mouse or a keyboard on a computer.</p>
 
+      <h3>What is the daily challenge?</h3>
+      <p>Every day there is one set of Daily boards, the same for everyone. You get one try, your streak grows each day you play, and you can share your result with a colored strip that shows how quickly you found pairs. The daily resets at midnight in your time zone. Free play has unlimited rounds with new random boards.</p>
+
       <h3>How is the score counted?</h3>
       <p>You earn one point for every pair you find within the 60-second round. Clicking a tile that is not part of the pair takes 2 seconds off the clock.</p>
 
@@ -593,8 +635,8 @@ h1 {
       <h3>Can I play offline?</h3>
       <p>You need a connection to load the page. After that the game runs entirely in your browser, so a round in progress keeps working if your connection drops.</p>
 
-      <h3>Is my best score saved?</h3>
-      <p>Your best score is stored in your browser on this device and is not sent anywhere. It may reset if you clear your browser data or play in a private window.</p>
+      <h3>Are my scores and streak saved?</h3>
+      <p>Your best score, your daily results and your streak are stored in your browser on this device and are not sent anywhere. They may reset if you clear your browser data or play in a private window.</p>
     </section>
 
   </article>
@@ -619,8 +661,12 @@ h1 {
   const RAMP_AT = 10;        // score at which same-group emojis start to appear
   const FLASH_MS = 130;      // green flash before the next grid
   const RESULT_GUARD_MS = 600; // ignore taps on the results card right after time runs out
+  const SPLITS = 6;          // daily result strip: one block per 10 seconds of the clock
+  const DAILY_EPOCH = Date.UTC(2026, 10, 10);   // Daily #1 was 10 November 2026
   const STORAGE_KEY = 'clickThePair.best';
   const OLD_STORAGE_KEY = 'tapThePair.best';   // key used before the rename, still read so no best score is lost
+  const DAILY_KEY = 'clickThePair.daily';      // today's daily attempt
+  const STREAK_KEY = 'clickThePair.streak';    // daily streak
 
   // Emoji pool, grouped so the difficulty ramp can pull look-alike neighbours.
   // Single code point emojis only: no skin tones, flags, clock faces or near-identical faces.
@@ -643,22 +689,39 @@ h1 {
   const tiles = Array.from(grid.querySelectorAll('.tile'));
   const scoreEl = $('score');
   const bestEl = $('best');
+  const bestLabel = $('best-label');
   const timeEl = $('time');
   const timeStat = $('time-stat');
   const timebar = $('timebar');
   const timebarFill = $('timebar-fill');
   const penaltyEl = $('penalty');
   const startScreen = $('start-screen');
+  const dailyBtn = $('daily-btn');
+  const freeBtn = $('start-btn');
+  const startMeta = $('start-meta');
   const results = $('results');
-  const startBtn = $('start-btn');
+  const resultTitle = $('result-title');
+  const resultBest = $('result-best');
+  const dailyLine = $('daily-line');
+  const dailyStrip = $('daily-strip');
+  const stripBlocks = $('strip-blocks');
+  const stripMisses = $('strip-misses');
   const againBtn = $('again-btn');
   const shareBtn = $('share-btn');
+  const toDailyBtn = $('to-daily');
   const shareNote = $('share-note');
   const announcer = $('announcer');
 
   let phase = 'idle';        // idle | playing | over
+  let mode = 'free';         // free | daily
   let score = 0;
+  let misses = 0;
+  let splits = [];
   let best = loadBest();
+  let today = dayInfo();
+  let dailyRun = null;       // { date, num } of the daily being played
+  let shown = null;          // what the results card shows: { kind: 'free', score } or { kind: 'daily', rec }
+  let rand = Math.random;    // swapped for a seeded generator on daily boards
   let values = [];           // emoji shown on each tile
   let pairEmoji = '';
   let lastPair = '';
@@ -678,6 +741,9 @@ h1 {
 
   /* ---------- helpers ---------- */
 
+  const plural = (n, one, many) => n + (n === 1 ? one : many);
+  const pad = n => (n < 10 ? '0' : '') + n;
+
   function loadBest() {
     try {
       const n = parseInt(localStorage.getItem(STORAGE_KEY) || localStorage.getItem(OLD_STORAGE_KEY), 10);
@@ -691,10 +757,23 @@ h1 {
     try { localStorage.setItem(STORAGE_KEY, String(n)); } catch (e) { /* storage blocked: keep playing */ }
   }
 
+  function readJSON(key) {
+    try {
+      const v = JSON.parse(localStorage.getItem(key));
+      return v && typeof v === 'object' ? v : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writeJSON(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* storage blocked: keep playing */ }
+  }
+
   // Fisher-Yates shuffle (in place)
   function shuffle(list) {
     for (let i = list.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(rand() * (i + 1));
       const tmp = list[i]; list[i] = list[j]; list[j] = tmp;
     }
     return list;
@@ -702,14 +781,87 @@ h1 {
 
   const sample = (list, n) => shuffle(list.slice()).slice(0, n);
 
+  // Seeded random numbers, so every player gets the same daily boards
+  function hashString(s) {
+    let h = 2166136261;
+    for (const ch of s) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+
+  function seededRandom(seed) {          // mulberry32
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ---------- the daily: one shared set of boards per calendar day ---------- */
+
+  // The day runs on the player's own calendar date and turns over at their local midnight.
+  function dayInfo() {
+    const d = new Date();
+    const y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
+    const utc = Date.UTC(y, m, day);
+    const iso = t => new Date(t).toISOString().slice(0, 10);
+    return {
+      key: iso(utc),
+      yesterday: iso(utc - 864e5),
+      num: Math.max(1, Math.round((utc - DAILY_EPOCH) / 864e5) + 1),
+      nextAt: new Date(y, m, day + 1).getTime()
+    };
+  }
+
+  function todaysRecord() {
+    const r = readJSON(DAILY_KEY);
+    return r && r.date === today.key ? r : null;
+  }
+
+  function streakNow() {
+    const s = readJSON(STREAK_KEY);
+    if (!s) return { current: 0, max: 0, played: 0 };
+    const alive = s.last === today.key || s.last === today.yesterday;
+    return { current: alive ? (s.current || 0) : 0, max: s.max || 0, played: s.played || 0 };
+  }
+
+  function bumpStreak() {
+    const s = readJSON(STREAK_KEY) || {};
+    if (s.last === today.key) return;
+    const current = s.last === today.yesterday ? (s.current || 0) + 1 : 1;
+    writeJSON(STREAK_KEY, { last: today.key, current, max: Math.max(current, s.max || 0), played: (s.played || 0) + 1 });
+  }
+
+  // Saved after every point and miss, so leaving mid-round still uses up the day's try.
+  function saveDaily(done) {
+    const rec = { date: dailyRun.date, num: dailyRun.num, score, misses, splits: splits.slice(), done };
+    writeJSON(DAILY_KEY, rec);
+    return rec;
+  }
+
+  // 🟩 4+ pairs, 🟨 2-3, 🟥 0-1 in each 10 seconds of the clock
+  const stripFor = list => Array.from({ length: SPLITS }, (_, i) => {
+    const n = (list && list[i]) || 0;
+    return n >= 4 ? '🟩' : n >= 2 ? '🟨' : '🟥';
+  }).join('');
+
+  function countdown(ms) {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    return Math.floor(s / 3600) + ':' + pad(Math.floor(s % 3600 / 60)) + ':' + pad(s % 60);
+  }
+
   /* ---------- grid ---------- */
 
   // Returns 12 emojis: 11 distinct ones plus exactly one duplicate.
   function buildGrid() {
+    rand = mode === 'daily'
+      ? seededRandom(hashString('click-the-pair:' + dailyRun.date + ':' + score))
+      : Math.random;
     let distinct;
     if (score >= RAMP_AT) {
       // Difficulty ramp: several tiles come from one group, and the pair is one of them.
-      const group = groups[Math.floor(Math.random() * groups.length)];
+      const group = groups[Math.floor(rand() * groups.length)];
       const sameGroup = Math.min(4 + Math.floor((score - RAMP_AT) / 3), 8);
       const others = ALL.filter(e => !group.includes(e));
       distinct = sample(group, sameGroup).concat(sample(others, TILE_COUNT - 1 - sameGroup));
@@ -748,6 +900,8 @@ h1 {
 
     if (values[index] !== pairEmoji) {            // wrong tile
       endAt -= PENALTY_MS;
+      misses += 1;
+      if (mode === 'daily') saveDaily(false);
       clearBad(tile);
       void tile.offsetWidth;                      // restart the shake if tapped twice
       tile.classList.add('is-bad');
@@ -770,6 +924,9 @@ h1 {
 
     // Second half of the pair: score it
     score += 1;
+    const used = ROUND_MS - (endAt - performance.now());
+    splits[Math.min(SPLITS - 1, Math.max(0, Math.floor(used / (ROUND_MS / SPLITS))))] += 1;
+    if (mode === 'daily') saveDaily(false);
     scoreEl.textContent = score;
     locked = true;
     const first = tiles[firstPick];
@@ -825,20 +982,127 @@ h1 {
     if (phase === 'playing') rafId = requestAnimationFrame(frame);
   }
 
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
+  /* ---------- start screen and results ---------- */
+
+  function refreshStart() {
+    const rec = todaysRecord();
+    dailyBtn.textContent = rec ? 'Today’s result' : 'Daily #' + today.num;
+    if (rec) {
+      startMeta.textContent = 'Daily #' + today.num + ' done. Next one in ' + countdown(today.nextAt - Date.now());
+    } else {
+      const st = streakNow();
+      startMeta.textContent = st.current
+        ? '🔥 ' + st.current + '-day streak. Play today to keep it going.'
+        : 'Same boards for everyone today. One try.';
+    }
+  }
+
+  function refreshToDaily() {
+    const open = !todaysRecord();
+    toDailyBtn.hidden = !open;
+    toDailyBtn.textContent = 'Play today’s Daily #' + today.num;
+  }
+
+  function renderDailyLine() {
+    if (!shown || shown.kind !== 'daily') return;
+    const parts = [];
+    const st = streakNow();
+    if (st.current) parts.push('🔥 ' + st.current + '-day streak');
+    if (shown.rec.date === today.key) parts.push('Next in ' + countdown(today.nextAt - Date.now()));
+    dailyLine.textContent = parts.join(' · ');
+  }
+
+  function resetShare() {
+    clearTimeout(shareNoteId);
+    shareBtn.textContent = 'Share';
+    shareNote.textContent = '';
+  }
+
+  function openResults(focusEl) {
+    resetShare();
+    refreshToDaily();
+    startScreen.hidden = true;
+    results.hidden = false;
+    focusEl.focus({ preventScroll: true });
+  }
+
+  function showFree(isNewBest) {
+    shown = { kind: 'free', score };
+    results.classList.remove('is-daily');
+    resultTitle.textContent = 'Time’s up!';
+    $('final-score').textContent = score;
+    $('final-unit').textContent = score === 1 ? 'pair' : 'pairs';
+    $('final-best').textContent = best;
+    $('new-best').hidden = !isNewBest;
+    resultBest.hidden = false;
+    dailyLine.hidden = true;
+    dailyStrip.hidden = true;
+    againBtn.textContent = 'Play Again';
+    againBtn.className = 'btn';
+    shareBtn.className = 'btn btn--ghost';
+    openResults(againBtn);
+  }
+
+  function showDaily(rec) {
+    shown = { kind: 'daily', rec };
+    results.classList.add('is-daily');
+    resultTitle.textContent = 'Daily #' + rec.num;
+    $('final-score').textContent = rec.score;
+    $('final-unit').textContent = rec.score === 1 ? 'pair' : 'pairs';
+    resultBest.hidden = true;
+    dailyLine.hidden = false;
+    dailyStrip.hidden = false;
+    renderDailyLine();
+    stripBlocks.textContent = stripFor(rec.splits);
+    stripMisses.textContent = rec.misses ? plural(rec.misses, ' miss', ' misses') : 'no misses';
+    againBtn.textContent = 'Free play';
+    againBtn.className = 'btn btn--ghost';
+    shareBtn.className = 'btn';
+    openResults(shareBtn);
+  }
+
+  // Keeps the countdowns live and notices when a new day's daily opens.
+  function clock() {
+    if (phase === 'playing') return;
+    if (Date.now() >= today.nextAt) today = dayInfo();
+    refreshStart();
+    if (!results.hidden) { renderDailyLine(); refreshToDaily(); }
+  }
 
   /* ---------- round lifecycle ---------- */
 
-  function start() {
+  function start(kind) {
+    today = dayInfo();
+    if (kind === 'daily') {
+      const rec = todaysRecord();
+      if (rec) { showDaily(rec); return; }      // today's try is used up: show the result instead
+      mode = 'daily';
+      dailyRun = { date: today.key, num: today.num };
+      bumpStreak();
+    } else {
+      mode = 'free';
+      dailyRun = null;
+    }
+
     clearTimeout(nextGridId);
     cancelAnimationFrame(rafId);
     clearInterval(backupId);
 
     phase = 'playing';
     score = 0;
+    misses = 0;
+    splits = new Array(SPLITS).fill(0);
+    lastPair = '';
     shownSecs = -1;
     scoreEl.textContent = '0';
-    bestEl.textContent = best;
+    if (mode === 'daily') {
+      bestLabel.textContent = 'Streak';
+      bestEl.textContent = streakNow().current;
+      saveDaily(false);
+    } else {
+      bestLabel.textContent = 'Best';
+      bestEl.textContent = best;
+    }
     penaltyEl.classList.remove('is-on');
     startScreen.hidden = true;
     results.hidden = true;
@@ -868,26 +1132,39 @@ h1 {
     paintTime(0);
     tiles.forEach(tile => { tile.disabled = true; });
 
+    if (mode === 'daily') {
+      const rec = saveDaily(true);
+      showDaily(rec);
+      announcer.textContent = 'Time’s up. Daily number ' + rec.num + ': ' + plural(rec.score, ' pair', ' pairs') +
+        ', ' + plural(rec.misses, ' miss', ' misses') + '.';
+      return;
+    }
+
     const isNewBest = score > best;
     if (isNewBest) { best = score; saveBest(best); }
     bestEl.textContent = best;
-
-    $('final-score').textContent = score;
-    $('final-unit').textContent = score === 1 ? 'pair' : 'pairs';
-    $('final-best').textContent = best;
-    $('new-best').hidden = !isNewBest;
-    shareBtn.textContent = 'Share';
-    shareNote.textContent = '';
-    results.hidden = false;
-    announcer.textContent = 'Time’s up. You found ' + score + (score === 1 ? ' pair' : ' pairs') + '. Best score: ' + best + '.';
-    againBtn.focus({ preventScroll: true });
+    showFree(isNewBest);
+    announcer.textContent = 'Time’s up. You found ' + plural(score, ' pair', ' pairs') + '. Best score: ' + best + '.';
   }
 
   // Stops a last-moment tile tap from landing on the results buttons
   const guarded = fn => () => { if (performance.now() - overAt >= RESULT_GUARD_MS) fn(); };
 
-  startBtn.addEventListener('click', start);
-  againBtn.addEventListener('click', guarded(start));
+  dailyBtn.addEventListener('click', () => start('daily'));
+  freeBtn.addEventListener('click', () => start('free'));
+  againBtn.addEventListener('click', guarded(() => start('free')));
+  toDailyBtn.addEventListener('click', guarded(() => start('daily')));
+
+  // A daily left mid-round counts as played.
+  const unfinished = todaysRecord();
+  if (unfinished && !unfinished.done) writeJSON(DAILY_KEY, Object.assign(unfinished, { done: true }));
+  refreshStart();
+  setInterval(clock, 1000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    tick();
+    clock();
+  });
 
   /* ---------- share ---------- */
 
@@ -920,15 +1197,33 @@ h1 {
     });
   }
 
+  function shareMessage() {
+    let url = shareUrl();
+    if (shown && shown.kind === 'daily') {
+      const r = shown.rec;
+      const st = streakNow();
+      if (url) url += '?daily';
+      const lines = [
+        'Click the Pair · Daily #' + r.num,
+        '🎯 ' + plural(r.score, ' pair', ' pairs') + ' · ❌ ' + plural(r.misses, ' miss', ' misses'),
+        stripFor(r.splits)
+      ];
+      if (st.current >= 2) lines.push('🔥 ' + st.current + '-day streak');
+      const text = lines.join('\n');
+      return { text, url, full: url ? text + '\n' + url : text };
+    }
+    const n = shown ? shown.score : score;
+    const text = 'I found ' + plural(n, ' pair', ' pairs') + ' in 60 seconds on Click the Pair!';
+    return { text, url, full: url ? text + ' ' + url : text };
+  }
+
   async function share() {
-    const text = 'I found ' + score + (score === 1 ? ' pair' : ' pairs') + ' in 60 seconds on Click the Pair!';
-    const url = shareUrl();
-    const full = url ? text + ' ' + url : text;
+    const msg = shareMessage();
     const touchDevice = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
     if (navigator.share && touchDevice) {
       try {
-        await navigator.share({ title: 'Click the Pair', text: text, url: url || undefined });
+        await navigator.share({ title: 'Click the Pair', text: msg.text, url: msg.url || undefined });
         return;
       } catch (e) {
         if (e && e.name === 'AbortError') return;   // player closed the share sheet
@@ -937,15 +1232,13 @@ h1 {
 
     clearTimeout(shareNoteId);
     try {
-      await copyText(full);
+      await copyText(msg.full);
       shareBtn.textContent = 'Copied!';
-      shareNote.textContent = 'Score copied. Paste it anywhere.';
-      shareNoteId = setTimeout(() => {
-        shareBtn.textContent = 'Share';
-        shareNote.textContent = '';
-      }, 2200);
+      shareNote.textContent = 'Result copied. Paste it anywhere.';
+      shareNoteId = setTimeout(resetShare, 2200);
     } catch (e) {
-      shareNote.textContent = full;                 // let the player copy it by hand
+      shareNote.textContent = msg.full;             // let the player copy it by hand
+      toDailyBtn.hidden = true;                     // make room for the text on small screens
     }
   }
 
