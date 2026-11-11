@@ -172,23 +172,34 @@ h1 {
   padding: 0 8px;
 }
 @media (min-width: 400px)  { .stage { padding: 0 12px; } }
-@media (min-width: 1024px) {
-  .stage { grid-template-columns: minmax(0, 1fr) 300px; column-gap: var(--ad-gap); padding: 0 24px; }
-  .ad--side { display: flex; }
+/* Wide screens: the game stays centered on the page and the sidebar ad sits in the
+   right-hand margin, 150px clear of the card. Below 1420px there is no room for
+   both, so the sidebar is hidden and the game keeps the center. */
+@media (min-width: 1420px) {
+  :root { --board-max: min(560px, calc(100vw - 980px)); }
+  .stage {
+    grid-template-columns: minmax(0, 1fr) var(--board-w) minmax(0, 1fr);
+    max-width: none;
+    padding: 0 24px;
+  }
+  .game { grid-column: 2; }
+  .ad--side { display: flex; grid-column: 3; justify-self: start; margin-left: var(--ad-gap); }
+}
+
+/* Board width: shrinks on short screens so the whole board stays in view; never below 64px tiles */
+.stage { --board-w: max(296px, min(var(--board-max), calc((100vh - 300px) * 4 / 3))); }
+@supports (height: 100svh) {
+  .stage { --board-w: max(296px, min(var(--board-max), calc((100svh - 300px) * 4 / 3))); }
 }
 
 .game {
   width: 100%;
-  /* Shrinks on short screens so the whole board stays in view; never below 64px tiles */
-  max-width: max(296px, min(var(--board-max), calc((100vh - 300px) * 4 / 3)));
+  max-width: var(--board-w);
   padding: 8px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 22px;
   box-shadow: var(--soft-shadow);
-}
-@supports (height: 100svh) {
-  .game { max-width: max(296px, min(var(--board-max), calc((100svh - 300px) * 4 / 3))); }
 }
 @media (min-width: 400px) { .game { padding: 12px; } }
 @media (min-width: 768px) { .game { padding: 16px; } }
@@ -574,7 +585,7 @@ h1 {
         <noscript><p style="text-align:center;margin:12px 0 4px">Tap the Pair needs JavaScript turned on to play.</p></noscript>
       </div>
 
-      <!-- AD SLOT: sidebar (300x250, desktop only; hidden below 1024px) -->
+      <!-- AD SLOT: sidebar (300x250, wide screens only; hidden below 1420px so the game stays centered) -->
       <aside class="ad ad--side" aria-label="Advertisement">
         <div id="ad-sidebar" class="ad__box"><span class="ad__placeholder">Advertisement</span></div>
       </aside>
@@ -649,9 +660,8 @@ h1 {
 
 <footer class="site-footer">
   <nav aria-label="Footer">
-    <a href="/privacy.html">Privacy Policy</a>
-    <a href="/terms.html">Terms</a>
-    <a href="/contact.html">Contact</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms</a>
   </nav>
   <p>© Tap the Pair. Free emoji matching game.</p>
 </footer>
