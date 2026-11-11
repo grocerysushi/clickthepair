@@ -451,6 +451,38 @@ h1 {
   font-size: .6875rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
 }
 
+/* ---------- Dropdown sections below the game ---------- */
+.content .fold { margin: 0 0 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.content .fold > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 14px 18px;
+  border-radius: 15px;
+  cursor: pointer;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.content .fold > summary::-webkit-details-marker { display: none; }
+.content .fold > summary::after {
+  content: '';
+  flex: none;
+  width: 9px; height: 9px;
+  margin: 0 4px 4px 0;
+  border-right: 2.5px solid var(--muted); border-bottom: 2.5px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform .15s ease;
+}
+.content .fold[open] > summary::after { margin: 4px 4px 0 0; transform: rotate(-135deg); }
+.content .fold > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) { .content .fold > summary:hover { background: var(--bg); } }
+.content .fold > summary h2,
+.content .fold > summary h3 { margin: 0; }
+.content .fold > summary h2 { font-size: clamp(1.125rem, 1rem + .6vw, 1.375rem); }
+.content .fold__body { padding: 2px 18px 6px; }
+.content section:first-child .fold { margin-top: 0; }
+.content #faq h2 { margin: 28px 0 12px; }
+.content .fold--q > summary { padding: 12px 18px; }
+.content .fold--q > summary h3 { font-size: 1rem; }
+
 /* ---------- Embed code ---------- */
 .embed-code {
   display: block; width: 100%; min-height: 128px; margin: 0 0 12px; padding: 12px;

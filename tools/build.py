@@ -219,6 +219,32 @@ def faq_pairs(content):
     return out
 
 
+def fold_sections(content):
+    """Turn each text section under the game into a dropdown (<details>).
+    The FAQ keeps its heading, and each question becomes its own dropdown."""
+    def question(q):
+        return ('      <details class="fold fold--q">\n'
+                '        <summary><h3>' + q.group(1) + '</h3></summary>\n'
+                '        <div class="fold__body"><p>' + q.group(2) + '</p></div>\n'
+                '      </details>')
+
+    def section(m):
+        sid, title, body = m.group(1), m.group(2), m.group(3)
+        if sid == 'faq':
+            body = re.sub(r'      <h3>(.*?)</h3>\n      <p>(.*?)</p>', question, body, flags=re.S)
+            return '    <section id="' + sid + '">\n      <h2>' + title + '</h2>\n' + body + '\n    </section>'
+        body = '\n'.join(('  ' + line) if line.strip() else line for line in body.split('\n'))
+        return ('    <section id="' + sid + '">\n'
+                '      <details class="fold">\n'
+                '        <summary><h2>' + title + '</h2></summary>\n'
+                '        <div class="fold__body">\n' + body + '\n        </div>\n'
+                '      </details>\n'
+                '    </section>')
+
+    return re.sub(r'    <section id="([\w-]+)">\n      <h2>(.*?)</h2>\n(.*?)\n    </section>', section, content, flags=re.S)
+
+
+
 def third_party_loader():
     return f'''<!-- Google tag ({GTM_ID}) and AdSense load once the page has finished loading, so they never slow the game down -->
 <script>
@@ -458,7 +484,7 @@ def render(page):
                  f'  <h1>{E(page["h1"])}</h1>',
                  f'  <p class="tagline">{E(page["tagline"])}</p>',
                  '</header>', '', '<main>', '', game_section(page), '', modes_nav(page), '',
-                 '  <article class="content">', '', content, '', '  </article>', '</main>', '',
+                 '  <article class="content">', '', fold_sections(content), '', '  </article>', '</main>', '',
                  '<footer class="site-footer">',
                  '  <nav aria-label="Footer">',
                  '    <a href="/privacy.html">Privacy Policy</a>',

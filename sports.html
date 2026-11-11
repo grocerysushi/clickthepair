@@ -501,6 +501,38 @@ h1 {
   font-size: .6875rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
 }
 
+/* ---------- Dropdown sections below the game ---------- */
+.content .fold { margin: 0 0 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.content .fold > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 14px 18px;
+  border-radius: 15px;
+  cursor: pointer;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.content .fold > summary::-webkit-details-marker { display: none; }
+.content .fold > summary::after {
+  content: '';
+  flex: none;
+  width: 9px; height: 9px;
+  margin: 0 4px 4px 0;
+  border-right: 2.5px solid var(--muted); border-bottom: 2.5px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform .15s ease;
+}
+.content .fold[open] > summary::after { margin: 4px 4px 0 0; transform: rotate(-135deg); }
+.content .fold > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (hover: hover) { .content .fold > summary:hover { background: var(--bg); } }
+.content .fold > summary h2,
+.content .fold > summary h3 { margin: 0; }
+.content .fold > summary h2 { font-size: clamp(1.125rem, 1rem + .6vw, 1.375rem); }
+.content .fold__body { padding: 2px 18px 6px; }
+.content section:first-child .fold { margin-top: 0; }
+.content #faq h2 { margin: 28px 0 12px; }
+.content .fold--q > summary { padding: 12px 18px; }
+.content .fold--q > summary h3 { font-size: 1rem; }
+
 /* ---------- Embed code ---------- */
 .embed-code {
   display: block; width: 100%; min-height: 128px; margin: 0 0 12px; padding: 12px;
@@ -671,28 +703,40 @@ h1 {
   <article class="content">
 
     <section id="how-to-play">
-      <h2>How the Sports &amp; Games Board Works</h2>
-      <p>Every tile on this board comes from sports, music and games. You will see a soccer ball, a basketball, a football, a tennis ball and a pool ball, plus dice, a dartboard, a guitar, a trumpet, a drum, a paint palette, a balloon, a gift, a trophy, a puzzle piece, a game controller, a circus tent and a bowling set. Each board shows 12 tiles, and exactly two of them match. Click both to score, and a new board appears.</p>
-      <p>Round balls and bright party colors fill every board, so the pair is surrounded by look-alikes from the start. You have 60 seconds, a wrong click costs 2 seconds, and your best score on this board is saved separately from the other modes.</p>
+      <details class="fold">
+        <summary><h2>How the Sports &amp; Games Board Works</h2></summary>
+        <div class="fold__body">
+        <p>Every tile on this board comes from sports, music and games. You will see a soccer ball, a basketball, a football, a tennis ball and a pool ball, plus dice, a dartboard, a guitar, a trumpet, a drum, a paint palette, a balloon, a gift, a trophy, a puzzle piece, a game controller, a circus tent and a bowling set. Each board shows 12 tiles, and exactly two of them match. Click both to score, and a new board appears.</p>
+        <p>Round balls and bright party colors fill every board, so the pair is surrounded by look-alikes from the start. You have 60 seconds, a wrong click costs 2 seconds, and your best score on this board is saved separately from the other modes.</p>
+        </div>
+      </details>
     </section>
 
     <section id="tips">
-      <h2>Tips for the Sports &amp; Games Board</h2>
-      <ul>
-        <li><strong>Check the balls first.</strong> Five of the emojis are balls, and they are the most likely to fool you. Compare their patterns and colors before anything else.</li>
-        <li><strong>Separate music from sport.</strong> Instruments have long, thin shapes, while sports gear is mostly round. That split makes the board quicker to read.</li>
-        <li><strong>Use the odd shapes.</strong> The trophy, the puzzle piece and the circus tent are unlike anything else on the board, so a pair of them stands out almost at once.</li>
-      </ul>
+      <details class="fold">
+        <summary><h2>Tips for the Sports &amp; Games Board</h2></summary>
+        <div class="fold__body">
+        <ul>
+          <li><strong>Check the balls first.</strong> Five of the emojis are balls, and they are the most likely to fool you. Compare their patterns and colors before anything else.</li>
+          <li><strong>Separate music from sport.</strong> Instruments have long, thin shapes, while sports gear is mostly round. That split makes the board quicker to read.</li>
+          <li><strong>Use the odd shapes.</strong> The trophy, the puzzle piece and the circus tent are unlike anything else on the board, so a pair of them stands out almost at once.</li>
+        </ul>
+        </div>
+      </details>
     </section>
 
     <section id="faq">
       <h2>Sports &amp; Games Board FAQ</h2>
 
-      <h3>Which emojis are on the board?</h3>
-      <p>There are 18 emojis in the set: soccer ball, basketball, football, tennis ball, pool ball, dice, dartboard, guitar, trumpet, drum, paint palette, balloon, gift, trophy, puzzle piece, game controller, circus tent and bowling. Each board uses 11 of them, with one appearing twice.</p>
+      <details class="fold fold--q">
+        <summary><h3>Which emojis are on the board?</h3></summary>
+        <div class="fold__body"><p>There are 18 emojis in the set: soccer ball, basketball, football, tennis ball, pool ball, dice, dartboard, guitar, trumpet, drum, paint palette, balloon, gift, trophy, puzzle piece, game controller, circus tent and bowling. Each board uses 11 of them, with one appearing twice.</p></div>
+      </details>
 
-      <h3>Is this board harder than the classic game?</h3>
-      <p>Usually, yes. The five balls in particular look alike at a glance, so expect a slightly lower score than on the classic board.</p>
+      <details class="fold fold--q">
+        <summary><h3>Is this board harder than the classic game?</h3></summary>
+        <div class="fold__body"><p>Usually, yes. The five balls in particular look alike at a glance, so expect a slightly lower score than on the classic board.</p></div>
+      </details>
     </section>
 
   </article>
