@@ -1,2 +1,6 @@
 .claude
 .git
+.env*
+src
+tools
+*.mp4
