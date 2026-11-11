@@ -238,8 +238,13 @@ def third_party_loader():
       add('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={ADSENSE_CLIENT}', true);
     }}
     function later() {{
-      if ('requestIdleCallback' in window) requestIdleCallback(loadThirdParty, {{ timeout: 2000 }});
-      else setTimeout(loadThirdParty, 1000);
+      // wait for the next frame to be painted, then for a quiet moment
+      requestAnimationFrame(function () {{
+        setTimeout(function () {{
+          if ('requestIdleCallback' in window) requestIdleCallback(loadThirdParty, {{ timeout: 2000 }});
+          else loadThirdParty();
+        }}, 0);
+      }});
     }}
     if (document.readyState === 'complete') later();
     else addEventListener('load', later, {{ once: true }});
