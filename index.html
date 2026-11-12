@@ -371,6 +371,7 @@ h1 {
 .btn--ghost:active { box-shadow: inset 0 0 0 2px var(--accent), 0 1px 0 var(--accent-edge); }
 
 .overlay__meta { margin: 0; max-width: 34ch; font-size: .875rem; line-height: 1.35; color: var(--muted); font-variant-numeric: tabular-nums; }
+.overlay__meta.is-challenge { color: var(--accent); font-weight: 700; }
 .result-best { font-variant-numeric: tabular-nums; }
 .result-strip { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .875rem; font-weight: 700; }
 .result-strip__blocks { font-family: var(--font-emoji); font-size: 1.125rem; line-height: 1; letter-spacing: 1px; }
@@ -677,7 +678,7 @@ h1 {
 
 <header class="site-header">
   <h1>Click the Pair – Free Emoji Matching Game</h1>
-  <p class="tagline">Twelve tiles, one matching pair, 60 seconds on the clock.</p>
+  <p class="tagline">Spot the matching emojis. How many pairs can you find in 60 seconds?</p>
 </header>
 
 <main>
@@ -722,12 +723,12 @@ h1 {
           <!-- Start screen -->
           <div class="overlay" id="start-screen">
             <h2 class="overlay__title">Click the Pair</h2>
-            <p class="overlay__text">Two tiles match. Find them and click both. You have 60 seconds.</p>
+            <p class="overlay__text">Find the two matching tiles. Play today’s challenge or enjoy unlimited free games.</p>
+            <p class="overlay__meta" id="start-meta">Same boards for everyone today. One try.</p>
             <div class="overlay__actions">
               <button type="button" class="btn" id="daily-btn">Daily challenge</button>
               <button type="button" class="btn btn--ghost" id="start-btn">Free play</button>
             </div>
-            <p class="overlay__meta" id="start-meta">Same boards for everyone today. One try.</p>
           </div>
 
           <!-- Results card -->
@@ -739,7 +740,7 @@ h1 {
             <p class="result-strip" id="daily-strip" hidden><span class="result-strip__blocks" id="strip-blocks" title="Pairs found in each 10 seconds" aria-hidden="true"></span><span id="strip-misses"></span></p>
             <div class="overlay__actions">
               <button type="button" class="btn" id="again-btn">Play Again</button>
-              <button type="button" class="btn btn--ghost" id="share-btn">Share</button>
+              <button type="button" class="btn btn--ghost" id="share-btn">Challenge a friend</button>
             </div>
             <button type="button" class="link-btn" id="to-daily" hidden>Play today’s Daily</button>
             <p class="share-note" id="share-note" role="status"></p>
@@ -893,7 +894,7 @@ h1 {
 </dialog>
 
 <script type="application/json" id="game-config">{"mode": "classic", "name": "Click the Pair", "label": "Classic", "tiles": 12, "cols": 4, "seconds": 60, "penalty": 2, "pool": "all", "rampAt": 10, "rampBase": 4, "rampMax": 8, "daily": true, "bestKey": "clickThePair.best", "legacyBestKey": "tapThePair.best", "url": "https://clickthepair.com/"}</script>
-<script src="/assets/game.js?v=7fde1363e0" defer></script>
+<script src="/assets/game.js?v=476b961b90" defer></script>
 
 </body>
 </html>

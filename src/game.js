@@ -134,6 +134,17 @@
 
   /* ---------- helpers ---------- */
 
+  // GTM can consume these events when configured; never let measurement interrupt play.
+  // The embeddable version deliberately has no analytics or advertising.
+  function track(event, details = {}) {
+    if (CFG.embed) return;
+    try {
+      if (window.dataLayer && typeof window.dataLayer.push === 'function') {
+        window.dataLayer.push(Object.assign({ event, game_board: CFG.mode, game_mode: mode }, details));
+      }
+    } catch (e) { /* analytics unavailable: keep playing */ }
+  }
+
   const plural = (n, one, many) => n + (n === 1 ? one : many);
   const pad = n => (n < 10 ? '0' : '') + n;
   function iso(t) { return new Date(t).toISOString().slice(0, 10); }
@@ -415,6 +426,7 @@
     const rec = todaysRecord();
     if (dailyBtn) dailyBtn.textContent = rec ? 'Today’s result' : 'Daily #' + today.num;
     if (!startMeta) return;
+    startMeta.classList.toggle('is-challenge', !!beat);
     if (beat) {
       startMeta.textContent = '🎯 A friend found ' + plural(beat, ' pair', ' pairs') + '. Can you beat it?';
     } else if (CFG.daily && rec) {
@@ -446,7 +458,7 @@
 
   function resetShare() {
     clearTimeout(shareNoteId);
-    shareBtn.textContent = 'Share';
+    shareBtn.textContent = shown && shown.kind === 'daily' ? 'Share daily result' : 'Challenge a friend';
     shareNote.textContent = '';
   }
 
@@ -607,6 +619,8 @@
     paintTime(ROUND_MS);
     rafId = requestAnimationFrame(frame);
     backupId = setInterval(tick, 250);   // keeps the clock honest if frames are throttled
+    track('game_start');
+    if (mode === 'daily') track('daily_start');
 
     // Bring the whole board into view (matters on small phones), then hand focus to the grid
     gameCard.scrollIntoView({ block: 'nearest' });
@@ -623,6 +637,7 @@
     penaltyEl.classList.remove('is-on');
     paintTime(0);
     tiles.forEach(tile => { tile.disabled = true; });
+    track('game_complete');
 
     if (mode === 'daily') {
       const rec = saveDaily(true);
@@ -649,9 +664,12 @@
   if (toDailyBtn) toDailyBtn.addEventListener('click', guarded(() => start('daily')));
 
   // A friend's challenge link puts free play first
-  if (beat && dailyBtn) {
-    freeBtn.className = 'btn';
-    dailyBtn.className = 'btn btn--ghost';
+  if (beat) {
+    freeBtn.textContent = 'Beat their score';
+    if (dailyBtn) {
+      freeBtn.className = 'btn';
+      dailyBtn.className = 'btn btn--ghost';
+    }
   }
 
   // A daily left mid-round counts as played.
@@ -718,23 +736,32 @@
   async function share() {
     const msg = shareMessage();
     const touchDevice = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const resultKind = shown ? shown.kind : mode;
+    track('game_share_click', { game_mode: resultKind, result_kind: resultKind });
 
     if (navigator.share && touchDevice) {
       try {
         await navigator.share({ title: 'Click the Pair', text: msg.text, url: msg.url });
+        // A resolved native share does not confirm that another person received it.
+        track('game_share_outcome', { game_mode: resultKind, result_kind: resultKind, share_outcome: 'native_resolved' });
         return;
       } catch (e) {
-        if (e && e.name === 'AbortError') return;   // player closed the share sheet
+        if (e && e.name === 'AbortError') {
+          track('game_share_outcome', { game_mode: resultKind, result_kind: resultKind, share_outcome: 'cancelled' });
+          return;   // player closed the share sheet
+        }
       }
     }
 
     clearTimeout(shareNoteId);
     try {
       await copyText(msg.full, shareBtn);
+      track('game_share_outcome', { game_mode: resultKind, result_kind: resultKind, share_outcome: 'copied' });
       shareBtn.textContent = 'Copied!';
       shareNote.textContent = 'Result copied. Paste it anywhere.';
       shareNoteId = setTimeout(resetShare, 2200);
     } catch (e) {
+      track('game_share_outcome', { game_mode: resultKind, result_kind: resultKind, share_outcome: 'manual_copy' });
       shareNote.textContent = msg.full;             // let the player copy it by hand
       if (toDailyBtn) toDailyBtn.hidden = true;     // make room for the text on small screens
     }
