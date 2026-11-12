@@ -20,6 +20,7 @@
     }
     function loadThirdParty() {
       add('https://www.googletagmanager.com/gtm.js?id=GTM-PTXMWV4L');
+      add('https://www.googletagmanager.com/gtm.js?id=GTM-TQBNH8SP');
       add('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6122544703023536', true);
     }
     function later() {
@@ -368,6 +369,7 @@ h1 {
 .btn--ghost:active { box-shadow: inset 0 0 0 2px var(--accent), 0 1px 0 var(--accent-edge); }
 
 .overlay__meta { margin: 0; max-width: 34ch; font-size: .875rem; line-height: 1.35; color: var(--muted); font-variant-numeric: tabular-nums; }
+.overlay__meta.is-challenge { color: var(--accent); font-weight: 700; }
 .result-best { font-variant-numeric: tabular-nums; }
 .result-strip { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .875rem; font-weight: 700; }
 .result-strip__blocks { font-family: var(--font-emoji); font-size: 1.125rem; line-height: 1; letter-spacing: 1px; }
@@ -688,10 +690,10 @@ h1 {
           <div class="overlay" id="start-screen">
             <h2 class="overlay__title">Valentine&#x27;s Day Board</h2>
             <p class="overlay__text">Every tile is a Valentine&#x27;s Day emoji. Find the matching pair in 60 seconds.</p>
+            <p class="overlay__meta" id="start-meta">New boards every round.</p>
             <div class="overlay__actions">
               <button type="button" class="btn btn--big" id="start-btn">Start</button>
             </div>
-            <p class="overlay__meta" id="start-meta">New boards every round.</p>
           </div>
 
           <!-- Results card -->
@@ -701,7 +703,7 @@ h1 {
             <p class="result-best" id="result-best">Best: <span id="final-best">0</span><span class="badge" id="new-best" hidden>New best</span><span id="beat-line"></span></p>
             <div class="overlay__actions">
               <button type="button" class="btn" id="again-btn">Play Again</button>
-              <button type="button" class="btn btn--ghost" id="share-btn">Share</button>
+              <button type="button" class="btn btn--ghost" id="share-btn">Challenge a friend</button>
             </div>
             <p class="share-note" id="share-note" role="status"></p>
           </div>
@@ -817,7 +819,7 @@ h1 {
 </dialog>
 
 <script type="application/json" id="game-config">{"mode": "valentines", "name": "Click the Pair (Valentine's Day)", "label": "Valentine's Day board", "tiles": 12, "cols": 4, "seconds": 60, "penalty": 2, "pool": "valentines", "rampAt": null, "rampBase": 4, "rampMax": 8, "daily": false, "bestKey": "clickThePair.best.valentines", "legacyBestKey": null, "url": "https://clickthepair.com/valentines-day.html"}</script>
-<script src="/assets/game.js?v=7fde1363e0" defer></script>
+<script src="/assets/game.js?v=55c82a8abf" defer></script>
 
 </body>
 </html>

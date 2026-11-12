@@ -22,6 +22,7 @@ import re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = 'https://clickthepair.com/'
 GTM_ID = 'GTM-PTXMWV4L'
+EVENTS_GTM_ID = 'GTM-TQBNH8SP'
 ADSENSE_CLIENT = 'ca-pub-6122544703023536'
 HINT_PENALTY = ('A wrong click costs 2 seconds. On a keyboard, move with Tab or the arrow keys '
                 'and press Enter or Space to pick a tile.')
@@ -74,9 +75,9 @@ PAGES = [
         'og_description': ('Find the two matching emojis before the 60-second timer runs out. '
                            'Free to play in your browser, no download needed.'),
         'h1': 'Click the Pair – Free Emoji Matching Game',
-        'tagline': 'Twelve tiles, one matching pair, 60 seconds on the clock.',
+        'tagline': 'Spot the matching emojis. How many pairs can you find in 60 seconds?',
         'start_title': 'Click the Pair',
-        'start_text': 'Two tiles match. Find them and click both. You have 60 seconds.',
+        'start_text': 'Find the two matching tiles. Play today’s challenge or enjoy unlimited free games.',
         'hint': HINT_PENALTY,
         'game_name': 'Click the Pair',
         'game_description': ('Click the Pair is a free emoji matching game. Find the two matching emojis in a grid '
@@ -361,6 +362,7 @@ def third_party_loader():
     }}
     function loadThirdParty() {{
       add('https://www.googletagmanager.com/gtm.js?id={GTM_ID}');
+      add('https://www.googletagmanager.com/gtm.js?id={EVENTS_GTM_ID}');
       add('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={ADSENSE_CLIENT}', true);
     }}
     function later() {{
@@ -483,10 +485,10 @@ def game_section(page):
           <div class="overlay" id="start-screen">
             <h2 class="overlay__title">{E(page['start_title'])}</h2>
             <p class="overlay__text">{E(page['start_text'])}</p>
+            <p class="overlay__meta" id="start-meta">{start_meta}</p>
             <div class="overlay__actions">
 {start_buttons}
             </div>
-            <p class="overlay__meta" id="start-meta">{start_meta}</p>
           </div>
 
           <!-- Results card -->
@@ -496,7 +498,7 @@ def game_section(page):
             <p class="result-best" id="result-best">Best: <span id="final-best">0</span><span class="badge" id="new-best" hidden>New best</span><span id="beat-line"></span></p>{daily_results}
             <div class="overlay__actions">
               <button type="button" class="btn" id="again-btn">Play Again</button>
-              <button type="button" class="btn btn--ghost" id="share-btn">Share</button>
+              <button type="button" class="btn btn--ghost" id="share-btn">Challenge a friend</button>
             </div>{to_daily}
             <p class="share-note" id="share-note" role="status"></p>
           </div>
