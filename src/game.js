@@ -124,10 +124,30 @@
   let shareNoteId = 0;
   const badTimers = new Map();
 
-  // "Beat my score" links: ?beat=21 sets a target for free play
+  // Score challenges use a URL fragment, which is not sent in the initial HTTP request.
+  // Older ?beat= links still work; remove the score from the query before third-party scripts load.
   const beat = (() => {
-    const n = parseInt(new URLSearchParams(location.search).get('beat'), 10);
-    return Number.isFinite(n) && n > 0 && n < 500 ? n : 0;
+    const valid = value => {
+      const n = parseInt(value, 10);
+      return Number.isFinite(n) && n > 0 && n < 500 ? n : 0;
+    };
+    const params = new URLSearchParams(location.search);
+    const oldBeat = valid(params.get('beat'));
+    const fragmentBeat = valid(new URLSearchParams(location.hash.slice(1)).get('beat'));
+    const savedBeat = valid(history.state && history.state.clickThePairBeat);
+    const n = oldBeat || fragmentBeat || savedBeat;
+    if (params.has('beat')) {
+      try {
+        const clean = new URL(location.href);
+        clean.searchParams.delete('beat');
+        // Preserve unrelated anchors. Store the score in this history entry for reloads.
+        const state = Object.assign({}, history.state || {});
+        if (oldBeat) state.clickThePairBeat = oldBeat;
+        if (oldBeat && !clean.hash) clean.hash = 'beat=' + oldBeat;
+        history.replaceState(state, '', clean.href);
+      } catch (e) { /* Older links still play if the address cannot be updated. */ }
+    }
+    return n;
   })();
 
   bestEl.textContent = best;
@@ -729,7 +749,7 @@
     }
     const n = shown ? shown.score : score;
     const text = 'I found ' + plural(n, ' pair', ' pairs') + ' in 60 seconds on ' + CFG.name + '.' + (n > 0 ? ' Can you beat it?' : '');
-    const url = n > 0 ? base + '?beat=' + n : base;
+    const url = n > 0 ? base + '#beat=' + n : base;
     return { text, url, full: text + ' ' + url };
   }
 
