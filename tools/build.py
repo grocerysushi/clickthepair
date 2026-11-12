@@ -22,6 +22,7 @@ import re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = 'https://clickthepair.com/'
 GTM_ID = 'GTM-PTXMWV4L'
+EVENTS_GTM_ID = 'GTM-TQBNH8SP'
 ADSENSE_CLIENT = 'ca-pub-6122544703023536'
 HINT_PENALTY = ('A wrong click costs 2 seconds. On a keyboard, move with Tab or the arrow keys '
                 'and press Enter or Space to pick a tile.')
@@ -361,6 +362,7 @@ def third_party_loader():
     }}
     function loadThirdParty() {{
       add('https://www.googletagmanager.com/gtm.js?id={GTM_ID}');
+      add('https://www.googletagmanager.com/gtm.js?id={EVENTS_GTM_ID}');
       add('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={ADSENSE_CLIENT}', true);
     }}
     function later() {{

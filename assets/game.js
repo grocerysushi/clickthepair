@@ -160,7 +160,8 @@
     if (CFG.embed) return;
     try {
       if (window.dataLayer && typeof window.dataLayer.push === 'function') {
-        window.dataLayer.push(Object.assign({ event, game_board: CFG.mode, game_mode: mode }, details));
+        // Clear the previous outcome so a later event cannot inherit it from the data layer.
+        window.dataLayer.push(Object.assign({ event, game_board: CFG.mode, game_mode: mode, share_outcome: null }, details));
       }
     } catch (e) { /* analytics unavailable: keep playing */ }
   }
