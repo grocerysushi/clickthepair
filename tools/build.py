@@ -33,7 +33,7 @@ EVENTS_GTM_ID = 'GTM-TQBNH8SP'
 ADSENSE_CLIENT = 'ca-pub-6122544703023536'
 # Public contact address, shown in the About section of the home page and in the
 # structured data. Leave empty to show no contact line.
-CONTACT_EMAIL = ''
+CONTACT_EMAIL = 'hello@kyleshaft.com'
 LAUNCHED = '2026-11-10'
 # True: the text sections under the game start open, so visitors (and reviewers) see the
 # content without clicking. False: they start as closed dropdowns. FAQ questions always start closed.
