@@ -39,7 +39,7 @@
 
 <title>Click the Pair – Free Emoji Matching Game | Play Online</title>
 <meta name="description" content="Play Click the Pair, a free emoji matching game. Find the matching pair before the 60-second timer runs out, then take the daily challenge. No download needed.">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="https://clickthepair.com/">
 
 <meta name="theme-color" content="#f6f1e7" media="(prefers-color-scheme: light)">
@@ -47,6 +47,7 @@
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Click the Pair">
 <meta property="og:title" content="Click the Pair – Free Emoji Matching Game">
 <meta property="og:description" content="Find the two matching emojis before the 60-second timer runs out. Free to play in your browser, no download needed.">
@@ -578,12 +579,94 @@ h1 {
 .embed-footer { margin: 10px 0 12px; text-align: center; font-size: .8125rem; color: var(--muted); }
 .is-embed .hint { display: none; }
 .is-embed .game-links { padding-top: 6px; }
+
+/* ---------- On this page (long pages only) ---------- */
+.toc { max-width: 720px; margin: 44px auto 0; padding: 0 20px; }
+.toc h2 { margin: 0 0 10px; font: 800 1.0625rem/1.3 var(--font-display); }
+.toc ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.toc a {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 6px 14px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink);
+  font-size: .875rem; font-weight: 700; text-decoration: none;
+}
+@media (hover: hover) { .toc a:hover { border-color: var(--accent); color: var(--accent); } }
+.toc + .content { margin-top: 24px; }
+.content section { scroll-margin-top: 12px; }
+
+/* ---------- Tables in the text sections ---------- */
+.content .table-wrap { margin: 0 0 1em; overflow-x: auto; }
+.content table { width: 100%; border-collapse: collapse; font-size: .9375rem; line-height: 1.45; }
+.content th, .content td { padding: 9px 14px 9px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.content th:last-child, .content td:last-child { padding-right: 0; }
+.content th { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.content tbody tr:last-child td { border-bottom: 0; }
+.content td.emoji { min-width: 5.25rem; font-family: var(--font-emoji); font-size: 1.5rem; line-height: 1.3; }
+.site-footer__updated { font-size: .8125rem; }
+.content td:first-child { white-space: nowrap; }
+.content #faq + section { margin-top: 20px; }
+.content td:last-child { min-width: 11rem; }
+/* Narrow screens: the look-alike table becomes a list, one group per block */
+@media (max-width: 599px) {
+  .content table.stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .content table.stack, .content table.stack tbody, .content table.stack tr, .content table.stack td { display: block; }
+  .content table.stack tr { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .content table.stack tbody tr:last-child { border-bottom: 0; }
+  .content table.stack td { min-width: 0; padding: 0; border: 0; }
+  .content table.stack td:nth-child(2) { margin-bottom: 2px; font-size: .8125rem; font-weight: 700; color: var(--muted); }
+}
 </style>
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://clickthepair.com/#organization",
+      "name": "Click the Pair",
+      "url": "https://clickthepair.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://clickthepair.com/icons/icon-512.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://clickthepair.com/#website",
+      "url": "https://clickthepair.com/",
+      "name": "Click the Pair",
+      "alternateName": "ClickThePair",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://clickthepair.com/#organization"
+      },
+      "description": "A free emoji matching game with a daily challenge, played in the browser."
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://clickthepair.com/#webpage",
+      "url": "https://clickthepair.com/",
+      "name": "Click the Pair – Free Emoji Matching Game | Play Online",
+      "description": "Play Click the Pair, a free emoji matching game. Find the matching pair before the 60-second timer runs out, then take the daily challenge. No download needed.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://clickthepair.com/#website"
+      },
+      "about": {
+        "@id": "https://clickthepair.com/#game"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://clickthepair.com/og-image.png",
+        "width": 1200,
+        "height": 630
+      },
+      "dateModified": "2026-11-24",
+      "datePublished": "2026-11-10"
+    },
     {
       "@type": [
         "VideoGame",
@@ -599,14 +682,108 @@ h1 {
       "operatingSystem": "Any",
       "gamePlatform": "Web browser",
       "playMode": "SinglePlayer",
+      "timeRequired": "PT1M",
       "inLanguage": "en",
       "isAccessibleForFree": true,
+      "publisher": {
+        "@id": "https://clickthepair.com/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://clickthepair.com/#webpage"
+      },
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock"
-      }
+      },
+      "datePublished": "2026-11-10"
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://clickthepair.com/#boards",
+      "name": "Click the Pair game modes and boards",
+      "numberOfItems": 13,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Click the Pair: Hard Mode",
+          "url": "https://clickthepair.com/hard.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Click the Pair: Easy Mode",
+          "url": "https://clickthepair.com/easy.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Click the Pair: Animals",
+          "url": "https://clickthepair.com/animals.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Click the Pair: Food",
+          "url": "https://clickthepair.com/food.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "Click the Pair: Sports & Games",
+          "url": "https://clickthepair.com/sports.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "Click the Pair: New Year's",
+          "url": "https://clickthepair.com/new-years.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "Click the Pair: Valentine's Day",
+          "url": "https://clickthepair.com/valentines-day.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "Click the Pair: St. Patrick's Day",
+          "url": "https://clickthepair.com/st-patricks-day.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "name": "Click the Pair: Easter",
+          "url": "https://clickthepair.com/easter.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "name": "Click the Pair: Fourth of July",
+          "url": "https://clickthepair.com/fourth-of-july.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "name": "Click the Pair: Halloween",
+          "url": "https://clickthepair.com/halloween.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "name": "Click the Pair: Thanksgiving",
+          "url": "https://clickthepair.com/thanksgiving.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "name": "Click the Pair: Christmas",
+          "url": "https://clickthepair.com/christmas.html"
+        }
+      ]
     },
     {
       "@type": "FAQPage",
@@ -666,6 +843,46 @@ h1 {
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Your best score, your daily results and your streak are stored in your browser on this device. They may reset if you clear your browser data or play in a private window. If you choose to share a result, your message includes your score."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Click the Pair a memory game?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not quite. In a classic memory game the cards are face down and you have to remember where they are. In Click the Pair every tile is face up the whole time. The challenge is spotting the repeat quickly, so it rewards observation and speed more than memory."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many different emojis are in the game?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The classic game draws from 111 emojis in six families: animals, food, sports and games, travel, nature and everyday things. Each of the eight holiday boards has its own set of 20."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why do the emojis look different on my friend's phone?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Emojis are drawn by each device, so Apple, Google, Samsung and Microsoft all show slightly different pictures for the same emoji. The two tiles in a pair always look identical to each other on your own screen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I leave during the daily challenge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Your try is used. The score you had when you left is saved as your result for the day, and a new daily opens at midnight in your time zone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the game have sound?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Click the Pair is silent, so you can play it anywhere without headphones."
           }
         }
       ]
@@ -785,11 +1002,28 @@ h1 {
     </div>
   </nav>
 
+  <nav class="toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ul>
+      <li><a href="#how-to-play">How to play</a></li>
+      <li><a href="#tips">Tips</a></li>
+      <li><a href="#daily">Daily challenge</a></li>
+      <li><a href="#boards">Game modes</a></li>
+      <li><a href="#look-alikes">Emoji look-alikes</a></li>
+      <li><a href="#science">Why it is hard</a></li>
+      <li><a href="#why-play">Why play</a></li>
+      <li><a href="#friends">Play with friends</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#embed">Embed the game</a></li>
+    </ul>
+  </nav>
+
   <article class="content">
 
 
     <section id="how-to-play">
-      <details class="fold">
+      <details class="fold" open>
         <summary><h2>How to Play Click the Pair</h2></summary>
         <div class="fold__body">
         <p>Click the Pair is a quick emoji matching game you can play right in your browser. Press Start and a grid of twelve emoji tiles appears. Ten of the tiles are one of a kind, and exactly two are the same. Find the two matching emojis and click them both to score a point. A fresh grid appears straight away, so keep going.</p>
@@ -801,7 +1035,7 @@ h1 {
     </section>
 
     <section id="tips">
-      <details class="fold">
+      <details class="fold" open>
         <summary><h2>Tips to Find Pairs Faster</h2></summary>
         <div class="fold__body">
         <ul>
@@ -811,16 +1045,181 @@ h1 {
           <li><strong>Keep your pointer close.</strong> Hold your cursor or thumb over the grid so you can click the moment you spot the pair.</li>
           <li><strong>Slow down after 10 points.</strong> Later grids mix in similar emojis, like several fruits or animals, so check the details.</li>
         </ul>
+
+        <h3>Use the first click</h3>
+        <p>When you click one half of the pair, the tile turns blue and stays selected while you find its twin. Only tiles outside the pair cost time. So click the first tile the moment you are sure of the match, and let your eyes travel to the second one while your hand catches up.</p>
+
+        <h3>What your score means in seconds</h3>
+        <p>A round is always 60 seconds, so your score tells you how long each board took you on average.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Pairs found</th><th scope="col">Average time per board</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>10</td><td>6 seconds</td></tr>
+              <tr><td>15</td><td>4 seconds</td></tr>
+              <tr><td>20</td><td>3 seconds</td></tr>
+              <tr><td>30</td><td>2 seconds</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>A wrong click costs 2 seconds. At a pace of 20 pairs, that is two thirds of a whole board, so one careless guess usually costs you a point.</p>
+
+        <h3>How the boards get harder</h3>
+        <p>For your first 10 pairs in the classic game, every board is drawn at random from the full set of 111 emojis, so most tiles look nothing alike. From 10 pairs on, each board picks one family (animals, food, sports and games, travel, nature or everyday things) and deals four different emojis from it. The matching pair is always one of that family. One more family member joins every three pairs, up to eight at 22 pairs.</p>
+        <p>The practical lesson: once you pass 10, find the cluster of related tiles first and compare only those. The game also never uses the same emoji as the pair twice in a row, so the one you just matched is not the answer on the next board.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="daily">
+      <details class="fold" open>
+        <summary><h2>How the Daily Challenge Works</h2></summary>
+        <div class="fold__body">
+        <p>The daily challenge is one 60-second round on the classic 12-tile board. What makes it different is that the boards are not random. They are generated from the date, so everyone who plays on the same day sees the same board for their first pair, the same board for their second pair, and so on. That makes your score a fair comparison with anyone else's.</p>
+        <p>You get one try per day. The try begins when you press the Daily button, and leaving in the middle of a round still counts, with whatever you had scored. The day turns over at midnight in your own time zone, and the start screen counts down to the next one. Daily #1 was played on November 10, 2026.</p>
+        <p>Playing on consecutive days builds a streak. Miss a day and the streak starts again from one. During a daily round, the box at the top right of the board shows your streak instead of your best score.</p>
+
+        <h3>Reading the result strip</h3>
+        <p>After a daily round, your result includes a strip of six colored squares, one for each 10 seconds of the clock:</p>
+        <ul>
+          <li><strong>🟩 Green:</strong> four or more pairs in those 10 seconds.</li>
+          <li><strong>🟨 Yellow:</strong> two or three pairs.</li>
+          <li><strong>🟥 Red:</strong> one pair or none.</li>
+        </ul>
+        <p>The strip shows the shape of your round at a glance: a fast start that faded, or a slow start that picked up. When you share a daily result, the message contains the strip, your score, your number of misses and your streak. It does not show any of the boards, so it is safe to post before your friends have played.</p>
+        <p>Open <strong>Your stats</strong> under the board to see how many dailies you have played, your current and best streak, your average and best score, and a chart of the last seven days.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="boards">
+      <details class="fold" open>
+        <summary><h2>Game Modes and Boards</h2></summary>
+        <div class="fold__body">
+        <p>Every board follows the same rule: one matching pair, 60 seconds on the clock. What changes is the number of tiles, the cost of a wrong click and the emojis in play. Each board keeps its own best score, so a tough round on one never spoils your record on another.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Board</th><th scope="col">Tiles</th><th scope="col">Wrong click</th><th scope="col">Daily</th><th scope="col">What is on it</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Classic</strong></td><td>12</td><td>2 seconds</td><td>Yes</td><td>A mix of all six emoji families, with look-alikes after 10 pairs</td></tr>
+              <tr><td><a href="/hard.html">Hard Mode</a></td><td>20</td><td>2 seconds</td><td>No</td><td>Look-alikes from one emoji family, from the first board</td></tr>
+              <tr><td><a href="/easy.html">Easy Mode</a></td><td>9</td><td>None</td><td>No</td><td>A mix of all six emoji families on bigger tiles</td></tr>
+              <tr><td><a href="/animals.html">Animals</a></td><td>12</td><td>2 seconds</td><td>No</td><td>Pandas, foxes, owls and 17 more animals</td></tr>
+              <tr><td><a href="/food.html">Food</a></td><td>12</td><td>2 seconds</td><td>No</td><td>Fruit, snacks and treats</td></tr>
+              <tr><td><a href="/sports.html">Sports &amp; Games</a></td><td>12</td><td>2 seconds</td><td>No</td><td>Balls, instruments and party games</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>New to the game? Start with the classic board on this page. Move to Easy Mode if the clock feels too tight, or to Hard Mode once you are regularly passing 15 pairs. The animal, food and sports boards are good practice for telling look-alikes apart, because every tile comes from one family.</p>
+
+        <h3>Holiday boards</h3>
+        <p>Eight holiday boards join the menu during their season. Each one has its own set of 20 themed emojis on a 12-tile board, with the usual 2-second penalty. You can also play any of them at any time of year from these links:</p>
+        <ul>
+          <li><a href="/new-years.html">New Year&#x27;s matching game</a>: fireworks, party poppers and countdown clocks. In the menu from December 26 to January 5.</li>
+          <li><a href="/valentines-day.html">Valentine&#x27;s Day matching game</a>: hearts, roses and chocolates. In the menu from February 1 to 14.</li>
+          <li><a href="/st-patricks-day.html">St. Patrick&#x27;s Day matching game</a>: four-leaf clovers, rainbows and pots of gold. In the menu from March 1 to 17.</li>
+          <li><a href="/easter.html">Easter matching game</a>: bunnies, chicks, eggs and spring flowers. In the menu from the two weeks before Easter, through Easter Monday.</li>
+          <li><a href="/fourth-of-july.html">Fourth of July matching game</a>: fireworks, cookout food and the Statue of Liberty. In the menu from June 20 to July 5.</li>
+          <li><a href="/halloween.html">Halloween matching game</a>: pumpkins, ghosts, bats and candy. In the menu from October 1 to 31.</li>
+          <li><a href="/thanksgiving.html">Thanksgiving matching game</a>: turkeys, pies, harvest foods and fall leaves. In the menu from November 1 through the day after Thanksgiving.</li>
+          <li><a href="/christmas.html">Christmas matching game</a>: Santas, trees, presents and snowmen. In the menu from the weekend after Thanksgiving through December 25.</li>
+        </ul>
+        </div>
+      </details>
+    </section>
+
+    <section id="look-alikes">
+      <details class="fold" open>
+        <summary><h2>Emoji Look-Alikes That Catch Players Out</h2></summary>
+        <div class="fold__body">
+        <p>Most wrong clicks happen between emojis that share a color or an outline. These are the groups worth learning. When two of them sit on the same board, check the detail in the right-hand column before you click.</p>
+        <div class="table-wrap">
+          <table class="stack">
+            <thead>
+              <tr><th scope="col">Emojis</th><th scope="col">Board</th><th scope="col">How to tell them apart</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="emoji">🍎 🍒 🍓</td><td>Classic, Food</td><td>Three red fruits. The apple is a single round fruit, the cherries come as two on a stem, and the strawberry is the pointed one.</td></tr>
+              <tr><td class="emoji">🍋 🍌</td><td>Classic, Food</td><td>Both yellow. The lemon is an oval and the banana is a curve.</td></tr>
+              <tr><td class="emoji">🍩 🍪 🥨</td><td>Classic, Food</td><td>Three brown snacks. Look for the hole in the doughnut and the knot in the pretzel.</td></tr>
+              <tr><td class="emoji">⚽ 🏀 🏈 🎾 🎱</td><td>Classic, Sports &amp; Games</td><td>Five balls. Sort them by color first, then by pattern.</td></tr>
+              <tr><td class="emoji">🐶 🐱 🦊 🐵 🐼</td><td>Classic, Animals</td><td>Five round animal faces. The ears are the fastest way to tell them apart.</td></tr>
+              <tr><td class="emoji">🔑 🔔 👑</td><td>Classic</td><td>Three metal objects, gold on most devices. Go by outline: long and thin, bell shaped, or spiked.</td></tr>
+              <tr><td class="emoji">🍁 🍂</td><td>Thanksgiving</td><td>One maple leaf against a cluster of fallen leaves. Count the leaves.</td></tr>
+              <tr><td class="emoji">🥔 🍠</td><td>Thanksgiving</td><td>Potato and roasted sweet potato. Similar shapes, different colors.</td></tr>
+              <tr><td class="emoji">🎆 🎇</td><td>New Year's, Fourth of July</td><td>Fireworks and a sparkler. The fireworks burst high in the sky, and the sparkler is a single spray of sparks.</td></tr>
+              <tr><td class="emoji">🎉 🎊</td><td>New Year's</td><td>Party popper and confetti ball. The popper is a cone and the ball is round.</td></tr>
+              <tr><td class="emoji">🐣 🐥</td><td>Easter</td><td>Two chicks. One is still hatching from its egg.</td></tr>
+              <tr><td class="emoji">🐰 🐇</td><td>Easter</td><td>A rabbit's face and a whole rabbit.</td></tr>
+              <tr><td class="emoji">💖 💘 💝</td><td>Valentine's Day</td><td>Three hearts: one sparkling, one with an arrow through it and one tied with a ribbon.</td></tr>
+              <tr><td class="emoji">🎅 🤶</td><td>Christmas</td><td>Santa Claus and Mrs. Claus. Santa is the one with the beard.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Why emojis look different on every device</h3>
+        <p>Emojis are drawn by your device, not by the game. Apple, Google, Samsung and Microsoft each design their own artwork for the same character, so the fox on an iPhone is not the same picture as the fox on an Android phone or a Windows laptop. The pair is always two copies of exactly the same emoji, so the two matching tiles look identical to each other on your screen. But a pair that stands out on one device may blend in a little more on another.</p>
+        <p>To keep things fair, the classic set leaves out the emojis that are hardest to tell apart at a glance: there are no skin tone variants, no flags, no clock faces and no near-identical smiley faces.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="science">
+      <details class="fold" open>
+        <summary><h2>Why the Matching Pair Is Hard to Spot</h2></summary>
+        <div class="fold__body">
+        <p>In most search games you know what you are looking for. Here you do not. Any tile could be the repeat, so you have to compare tiles with each other instead of hunting for one known target. On a 12-tile board there are 66 different ways to choose two tiles, and only one of them is the pair. The 20 tiles of Hard Mode make 190 combinations, and the nine tiles of Easy Mode make just 36.</p>
+        <p>Vision researchers have studied tasks like this for decades under the name visual search, and two of their findings explain most of what you feel when you play. First, an item that differs from everything around it in a simple feature, such as color, seems to pop out no matter how many other items there are. Anne Treisman and Garry Gelade described this in 1980 in their feature integration theory of attention. It is why two bright red tiles on a board of blues and greens are found almost instantly. Second, search slows down as the target becomes more similar to the items around it, a point John Duncan and Glyn Humphreys made in 1989. That is exactly what the game does after 10 pairs, and from the first board in Hard Mode, when it fills the grid with members of one family.</p>
+        <p>There is also a limit in the eye itself. You only see sharp detail in the small central part of your vision, an area roughly the width of your thumb held at arm's length. Everything outside it is blurrier, and objects packed close together at the edge of your vision are hard to tell apart. Color and rough shape survive out there. Fine detail does not.</p>
+        <p>Put together, this suggests a two-step way to play. Let color and overall shape pick out a few candidates from the whole board, then look straight at each candidate to confirm the match before you click.</p>
         </div>
       </details>
     </section>
 
     <section id="why-play">
-      <details class="fold">
+      <details class="fold" open>
         <summary><h2>Why Play Brain Games Like This?</h2></summary>
         <div class="fold__body">
         <p>Short puzzle games are an easy way to take a break. A round of Click the Pair lasts one minute, so it fits into a coffee break, a bus ride or the gap between two tasks. There is only one rule to learn, and every round gives you a clear goal: beat your last score.</p>
         <p>Many people enjoy the focus that a spot-the-match game asks for. You look closely, react quickly and get instant feedback. We make no health or medical claims about the game. It is meant to be fun, with a bit of friendly competition against yourself or your friends.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="friends">
+      <details class="fold" open>
+        <summary><h2>Play With Friends, Family or a Group</h2></summary>
+        <div class="fold__body">
+        <p>Click the Pair is a one-player game, but a 60-second round with a single number at the end is easy to turn into a contest.</p>
+        <ul>
+          <li><strong>Send a challenge.</strong> After a free-play round, press Challenge a friend. The link you share carries your score, and whoever opens it is told the number of pairs to beat.</li>
+          <li><strong>Compare dailies.</strong> Everyone gets the same daily boards, so a group chat where each person posts their result strip works like a small league. Nobody can practice the boards first.</li>
+          <li><strong>Pass one device around.</strong> Take turns of one minute each and write the scores down. The best score is saved for the device, not for each person, so keep your own tally.</li>
+          <li><strong>Put it on a big screen.</strong> The game runs in any modern browser, so a laptop connected to a TV or projector works. One person clicks while the room calls out the pair.</li>
+          <li><strong>Pick the board to suit the group.</strong> <a href="easy.html">Easy Mode</a> has nine large tiles and no time penalties, which suits first-time players. <a href="hard.html">Hard Mode</a> is for the people who think the classic game is too gentle. The holiday boards are made for parties.</li>
+        </ul>
+        <p>If you run a website, you can also <a href="#embed">add the game to your own page</a>. The embedded version has no ads and no analytics.</p>
+        </div>
+      </details>
+    </section>
+
+    <section id="about">
+      <details class="fold" open>
+        <summary><h2>About Click the Pair</h2></summary>
+        <div class="fold__body">
+        <p>Click the Pair is an independent browser game that launched in November 2026. The aim is a matching game that takes one minute, needs no instructions and respects the person playing it. In practice that means:</p>
+        <ul>
+          <li><strong>Free, with no account.</strong> There is nothing to buy, nothing to download and no sign-up. The site is paid for by advertising.</li>
+          <li><strong>Your scores stay with you.</strong> Best scores, daily results, streaks and stats are stored in your own browser, on your own device. The <a href="privacy.html">Privacy Policy</a> explains exactly what is and is not collected.</li>
+          <li><strong>Fair boards.</strong> Every board has exactly one matching pair, and the daily boards are identical for every player.</li>
+          <li><strong>Playable by more people.</strong> The game works with touch, a mouse or a keyboard, announces your result to screen readers, follows your light or dark setting and tones down its animations if your device asks for reduced motion.</li>
+          <li><strong>Works offline.</strong> After your first visit the game is saved in your browser, and on a phone you can add it to your home screen.</li>
+        </ul>
+        <p>There are six everyday boards and eight holiday boards so far, and more are planned.</p>
         </div>
       </details>
     </section>
@@ -862,10 +1261,35 @@ h1 {
         <summary><h3>Are my scores and streak saved?</h3></summary>
         <div class="fold__body"><p>Your best score, your daily results and your streak are stored in your browser on this device. They may reset if you clear your browser data or play in a private window. If you choose to share a result, your message includes your score.</p></div>
       </details>
+
+      <details class="fold fold--q">
+        <summary><h3>Is Click the Pair a memory game?</h3></summary>
+        <div class="fold__body"><p>Not quite. In a classic memory game the cards are face down and you have to remember where they are. In Click the Pair every tile is face up the whole time. The challenge is spotting the repeat quickly, so it rewards observation and speed more than memory.</p></div>
+      </details>
+
+      <details class="fold fold--q">
+        <summary><h3>How many different emojis are in the game?</h3></summary>
+        <div class="fold__body"><p>The classic game draws from 111 emojis in six families: animals, food, sports and games, travel, nature and everyday things. Each of the eight holiday boards has its own set of 20.</p></div>
+      </details>
+
+      <details class="fold fold--q">
+        <summary><h3>Why do the emojis look different on my friend's phone?</h3></summary>
+        <div class="fold__body"><p>Emojis are drawn by each device, so Apple, Google, Samsung and Microsoft all show slightly different pictures for the same emoji. The two tiles in a pair always look identical to each other on your own screen.</p></div>
+      </details>
+
+      <details class="fold fold--q">
+        <summary><h3>What happens if I leave during the daily challenge?</h3></summary>
+        <div class="fold__body"><p>Your try is used. The score you had when you left is saved as your result for the day, and a new daily opens at midnight in your time zone.</p></div>
+      </details>
+
+      <details class="fold fold--q">
+        <summary><h3>Does the game have sound?</h3></summary>
+        <div class="fold__body"><p>No. Click the Pair is silent, so you can play it anywhere without headphones.</p></div>
+      </details>
     </section>
 
     <section id="embed">
-      <details class="fold">
+      <details class="fold" open>
         <summary><h2>Add Click the Pair to Your Website</h2></summary>
         <div class="fold__body">
         <p>Teachers, bloggers and game sites are welcome to put Click the Pair on their own pages for free. Copy the code below and paste it into your page. The game runs inside a frame with no ads, no sign-up and nothing for your visitors to install.</p>
@@ -881,10 +1305,15 @@ h1 {
 
 <footer class="site-footer">
   <nav aria-label="Footer">
+    <a href="#how-to-play">How to Play</a>
+    <a href="#boards">Game Modes</a>
+    <a href="#faq">FAQ</a>
+    <a href="#about">About</a>
     <a href="/privacy.html">Privacy Policy</a>
     <a href="/terms.html">Terms</a>
   </nav>
   <p>© Click the Pair. Free emoji matching game.</p>
+  <p class="site-footer__updated">Page updated <time datetime="2026-11-24">November 24, 2026</time></p>
 </footer>
 
 <dialog class="stats" id="stats" aria-labelledby="stats-title">

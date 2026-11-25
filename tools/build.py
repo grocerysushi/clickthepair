@@ -11,6 +11,13 @@ Writes:  index.html, hard.html, easy.html, animals.html, food.html, sports.html,
 The generated files are what Vercel serves. Edit the files in src/ (and the page
 settings below), then run this script again. privacy.html and terms.html are
 edited by hand and are not touched here.
+
+Search and AdSense notes:
+  - Every page gets structured data (WebSite, Organization, WebPage, the game, FAQ,
+    breadcrumbs) built from the settings below, so it always matches the visible page.
+  - The home page lists every board, including the holiday boards that are out of
+    season, so each page has a visible link pointing at it all year.
+  - Set CONTACT_EMAIL to show a contact line in the About section.
 """
 import datetime
 import hashlib
@@ -24,6 +31,13 @@ SITE = 'https://clickthepair.com/'
 GTM_ID = 'GTM-PTXMWV4L'
 EVENTS_GTM_ID = 'GTM-TQBNH8SP'
 ADSENSE_CLIENT = 'ca-pub-6122544703023536'
+# Public contact address, shown in the About section of the home page and in the
+# structured data. Leave empty to show no contact line.
+CONTACT_EMAIL = ''
+LAUNCHED = '2026-11-10'
+# True: the text sections under the game start open, so visitors (and reviewers) see the
+# content without clicking. False: they start as closed dropdowns. FAQ questions always start closed.
+SECTIONS_OPEN = True
 HINT_PENALTY = ('A wrong click costs 2 seconds. On a keyboard, move with Tab or the arrow keys '
                 'and press Enter or Space to pick a tile.')
 
@@ -41,12 +55,13 @@ CLASSIC = {
     'daily': True, 'bestKey': 'clickThePair.best', 'legacyBestKey': 'tapThePair.best',
 }
 
-def holiday(slug, key, icon, name, blurb, things, description, tagline):
+def holiday(slug, key, icon, name, blurb, things, description, tagline, when):
     """A holiday board page. 'key' names its emoji set (THEMES) and date range (SEASONS) in src/game.js."""
     article = 'an' if name[0] in 'AEIOU' else 'a'
     return {
         'file': f'{slug}.html', 'path': f'{slug}.html',
         'nav': (icon, name, blurb), 'nav_group': 'holiday', 'season': key,
+        'board_name': name, 'things': things, 'when': when,
         'title': f'{name} Emoji Matching Game | Click the Pair',
         'description': description,
         'og_title': f'{name} Emoji Matching Game',
@@ -84,6 +99,7 @@ PAGES = [
                              'of twelve tiles and score as many pairs as you can in 60 seconds.'),
         'config': CLASSIC,
         'adsense_meta': True,
+        'board_name': 'Classic', 'things': 'A mix of all six emoji families, with look-alikes after 10 pairs',
     },
     {
         'file': 'hard.html', 'path': 'hard.html',
@@ -91,6 +107,7 @@ PAGES = [
         'title': 'Hard Mode – 20-Tile Emoji Matching Game | Click the Pair',
         'description': ('Play Click the Pair Hard Mode: 20 tiles full of look-alike emojis and one matching pair. '
                         'Beat the 60-second timer. Free in your browser, no download.'),
+        'board_name': 'Hard Mode', 'things': 'Look-alikes from one emoji family, from the first board',
         'h1': 'Click the Pair Hard Mode – 20-Tile Emoji Challenge',
         'tagline': 'Twenty tiles, look-alike emojis, one matching pair.',
         'start_title': 'Hard Mode',
@@ -109,6 +126,7 @@ PAGES = [
         'title': 'Easy Mode – Relaxed Emoji Matching Game | Click the Pair',
         'description': ('Click the Pair Easy Mode: nine big tiles, one matching pair and no time penalties. '
                         'A relaxed, free emoji matching game you can play in your browser.'),
+        'board_name': 'Easy Mode', 'things': 'A mix of all six emoji families on bigger tiles',
         'h1': 'Click the Pair Easy Mode – Relaxed Emoji Matching',
         'tagline': 'Nine big tiles, one matching pair, no time penalties.',
         'start_title': 'Easy Mode',
@@ -129,6 +147,7 @@ PAGES = [
         'title': 'Animal Emoji Matching Game | Click the Pair',
         'description': ('Find the matching pair on a board full of animal emojis: pandas, foxes, owls and more. '
                         'A free 60-second animal matching game, no download needed.'),
+        'board_name': 'Animals', 'things': 'Pandas, foxes, owls and 17 more animals',
         'h1': 'Animal Emoji Matching Game',
         'tagline': 'Twelve animal tiles, one matching pair, 60 seconds.',
         'start_title': 'Animal Board',
@@ -146,6 +165,7 @@ PAGES = [
         'title': 'Food Emoji Matching Game | Click the Pair',
         'description': ('Find the matching pair on a board of fruit, snacks and treats. A free 60-second food '
                         'emoji matching game you can play in your browser, no download needed.'),
+        'board_name': 'Food', 'things': 'Fruit, snacks and treats',
         'h1': 'Food Emoji Matching Game',
         'tagline': 'Fruit, snacks and treats. One matching pair.',
         'start_title': 'Food Board',
@@ -163,6 +183,7 @@ PAGES = [
         'title': 'Sports & Games Emoji Matching Game | Click the Pair',
         'description': ('Find the matching pair among balls, instruments and party games. A free 60-second '
                         'sports emoji matching game you can play in your browser.'),
+        'board_name': 'Sports & Games', 'things': 'Balls, instruments and party games',
         'h1': 'Sports & Games Emoji Matching Game',
         'tagline': 'Balls, music and party games. One matching pair.',
         'start_title': 'Sports & Games',
@@ -180,35 +201,43 @@ PAGES = [
             'fireworks, party poppers and countdown clocks',
             ("A free New Year's game: find the matching pair among fireworks, confetti and countdown clocks "
              'before the timer runs out. Play while you wait for midnight.'),
-            'Fireworks, confetti and countdowns. One matching pair.'),
+            'Fireworks, confetti and countdowns. One matching pair.',
+            'December 26 to January 5'),
     holiday('valentines-day', 'valentines', '💘', "Valentine's Day", 'Hearts, roses and chocolates',
             'hearts, roses and chocolates',
             ("A free Valentine's Day game: find the matching pair among hearts, roses, chocolates and love "
              'letters before the 60-second timer runs out. No download needed.'),
-            'Hearts, roses and chocolates. One matching pair.'),
+            'Hearts, roses and chocolates. One matching pair.',
+            'February 1 to 14'),
     holiday('st-patricks-day', 'stpatricks', '🍀', "St. Patrick's Day", 'Clovers, rainbows and pots of gold',
             'four-leaf clovers, rainbows and pots of gold',
             ("A free St. Patrick's Day game: find the matching pair among clovers, rainbows and bags of gold "
              'on a board full of green before the 60-second timer runs out.'),
-            'Clovers, rainbows and gold. One matching pair.'),
+            'Clovers, rainbows and gold. One matching pair.',
+            'March 1 to 17'),
     holiday('easter', 'easter', '🐣', 'Easter', 'Bunnies, chicks and eggs',
             'bunnies, chicks, eggs and spring flowers',
             ('A free Easter game: find the matching pair among bunnies, chicks, eggs and spring flowers '
              'before the 60-second timer runs out. Fun for the whole family.'),
-            'Bunnies, chicks and eggs. One matching pair.'),
+            'Bunnies, chicks and eggs. One matching pair.',
+            'the two weeks before Easter, through Easter Monday'),
     holiday('fourth-of-july', 'july4', '🎆', 'Fourth of July', 'Fireworks, hot dogs and Lady Liberty',
             'fireworks, cookout food and the Statue of Liberty',
             ('A free Fourth of July game: find the matching pair among fireworks, hot dogs, burgers and the '
              'Statue of Liberty before the 60-second timer runs out.'),
-            'Fireworks and cookout food. One matching pair.'),
+            'Fireworks and cookout food. One matching pair.',
+            'June 20 to July 5'),
     holiday('halloween', 'halloween', '🎃', 'Halloween', 'Pumpkins, ghosts and bats',
             'pumpkins, ghosts, bats and candy',
             ('A free Halloween game: find the matching pair among pumpkins, ghosts, bats, vampires and candy '
              'before the 60-second timer runs out. A quick, spooky party game.'),
-            'Pumpkins, ghosts and candy. One matching pair.'),
+            'Pumpkins, ghosts and candy. One matching pair.',
+            'October 1 to 31'),
     {
         'file': 'thanksgiving.html', 'path': 'thanksgiving.html',
         'nav': ('🦃', 'Thanksgiving', 'Turkey, pie and fall leaves'), 'nav_group': 'holiday', 'season': 'thanksgiving',
+        'board_name': 'Thanksgiving', 'things': 'turkeys, pies, harvest foods and fall leaves',
+        'when': 'November 1 through the day after Thanksgiving',
         'title': 'Thanksgiving Emoji Matching Game | Click the Pair',
         'description': ('A free Thanksgiving game: find the matching pair among turkeys, pies and fall leaves '
                         'before the 60-second timer runs out. Fun for the whole family.'),
@@ -230,6 +259,8 @@ PAGES = [
     {
         'file': 'christmas.html', 'path': 'christmas.html',
         'nav': ('🎄', 'Christmas', 'Santa, presents and snowmen'), 'nav_group': 'holiday', 'season': 'christmas',
+        'board_name': 'Christmas', 'things': 'Santas, trees, presents and snowmen',
+        'when': 'the weekend after Thanksgiving through December 25',
         'title': 'Christmas Emoji Matching Game – Free Online | Click the Pair',
         'description': ('A free Christmas game: find the matching pair among Santas, trees, presents and '
                         'snowmen before the 60-second timer runs out. Great for holiday parties.'),
@@ -336,7 +367,7 @@ def fold_sections(content):
             return '    <section id="' + sid + '">\n      <h2>' + title + '</h2>\n' + body + '\n    </section>'
         body = '\n'.join(('  ' + line) if line.strip() else line for line in body.split('\n'))
         return ('    <section id="' + sid + '">\n'
-                '      <details class="fold">\n'
+                '      <details class="fold"' + (' open' if SECTIONS_OPEN else '') + '>\n'
                 '        <summary><h2>' + title + '</h2></summary>\n'
                 '        <div class="fold__body">\n' + body + '\n        </div>\n'
                 '      </details>\n'
@@ -344,6 +375,110 @@ def fold_sections(content):
 
     return re.sub(r'    <section id="([\w-]+)">\n      <h2>(.*?)</h2>\n(.*?)\n    </section>', section, content, flags=re.S)
 
+
+
+TODAY = datetime.date.today()
+TODAY_TEXT = f'{TODAY:%B} {TODAY.day}, {TODAY.year}'
+
+# Short labels for the "On this page" links (falls back to the section heading)
+TOC_LABELS = {
+    'how-to-play': 'How to play', 'tips': 'Tips', 'daily': 'Daily challenge', 'boards': 'Game modes',
+    'look-alikes': 'Emoji look-alikes', 'science': 'Why it is hard', 'why-play': 'Why play',
+    'friends': 'Play with friends', 'about': 'About', 'faq': 'FAQ', 'embed': 'Embed the game',
+}
+
+
+COUNT_WORDS = {6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine', 10: 'Ten', 11: 'Eleven', 12: 'Twelve'}
+
+
+def game_pages():
+    return [p for p in PAGES if not p.get('embed')]
+
+
+def boards_section():
+    """Home page section listing every board. Written in the same shape as the
+    hand-written sections in src/pages so fold_sections() treats it the same way."""
+    rows, holidays = [], []
+    for p in game_pages():
+        name = p['board_name']
+        if p.get('nav_group') == 'holiday':
+            holidays.append(f'''        <li><a href="/{p['path']}">{E(name)} matching game</a>: {E(p['things'])}. In the menu from {E(p['when'])}.</li>''')
+            continue
+        c = p['config']
+        penalty = f"{c['penalty']} seconds" if c['penalty'] else 'None'
+        link = f'''<a href="/{p['path']}">{E(name)}</a>''' if p['path'] else f'<strong>{E(name)}</strong>'
+        daily = 'Yes' if c['daily'] else 'No'
+        rows.append(f'''            <tr><td>{link}</td><td>{c['tiles']}</td><td>{penalty}</td><td>{daily}</td><td>{E(p['things'])}</td></tr>''')
+    return f'''    <section id="boards">
+      <h2>Game Modes and Boards</h2>
+      <p>Every board follows the same rule: one matching pair, 60 seconds on the clock. What changes is the number of tiles, the cost of a wrong click and the emojis in play. Each board keeps its own best score, so a tough round on one never spoils your record on another.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Board</th><th scope="col">Tiles</th><th scope="col">Wrong click</th><th scope="col">Daily</th><th scope="col">What is on it</th></tr>
+          </thead>
+          <tbody>
+{chr(10).join(rows)}
+          </tbody>
+        </table>
+      </div>
+      <p>New to the game? Start with the classic board on this page. Move to Easy Mode if the clock feels too tight, or to Hard Mode once you are regularly passing 15 pairs. The animal, food and sports boards are good practice for telling look-alikes apart, because every tile comes from one family.</p>
+
+      <h3>Holiday boards</h3>
+      <p>{COUNT_WORDS.get(len(holidays), len(holidays))} holiday boards join the menu during their season. Each one has its own set of 20 themed emojis on a 12-tile board, with the usual 2-second penalty. You can also play any of them at any time of year from these links:</p>
+      <ul>
+{chr(10).join(holidays)}
+      </ul>
+    </section>'''
+
+
+def more_boards_section(current):
+    """Mode pages: plain links to every other board, so no page depends on the seasonal menu for its links."""
+    def links(holiday):
+        out = []
+        for p in game_pages():
+            if p is current or (p.get('nav_group') == 'holiday') != holiday:
+                continue
+            out.append(f'''<a href="/{p['path']}">{E(p['board_name'])}</a>''')
+        return ', '.join(out)
+    return f'''    <section id="more-boards">
+      <h2>More Click the Pair Boards</h2>
+      <p>This is one of {len(game_pages())} Click the Pair boards. They all use the same rule, one matching pair and 60 seconds, with different tiles.</p>
+      <p><strong>Everyday boards:</strong> {links(False)}.</p>
+      <p><strong>Holiday boards:</strong> {links(True)}.</p>
+      <p>For the full rules, scoring and tips, see <a href="/#how-to-play">how to play Click the Pair</a>.</p>
+    </section>'''
+
+
+def contact_line():
+    if not CONTACT_EMAIL:
+        return ''
+    return (f'      <p>Questions, bug reports and ideas for new boards are welcome at '
+            f'<a href="mailto:{E(CONTACT_EMAIL)}">{E(CONTACT_EMAIL)}</a>.</p>\n')
+
+
+def page_content(page):
+    """The text under the game: the hand-written sections plus the generated ones."""
+    content = read('src/pages/' + page['file']).rstrip('\n')
+    content = content.replace('{{pool_size}}', str(len(ALL)))
+    content = content.replace('{{contact}}\n', contact_line())
+    if '<!-- boards -->' in content:
+        content = content.replace('<!-- boards -->', boards_section())
+    else:
+        content += '\n\n' + more_boards_section(page)
+    for token in ('{{', '<!-- boards'):
+        assert token not in content, f'{page["file"]}: unfilled placeholder {token}'
+    return content
+
+
+def toc(content):
+    """"On this page" links for long pages."""
+    sections = re.findall(r'    <section id="([\w-]+)">\n      <h2>(.*?)</h2>', content)
+    if len(sections) < 6:
+        return ''
+    items = '\n'.join(f'      <li><a href="#{sid}">{TOC_LABELS.get(sid, title)}</a></li>' for sid, title in sections)
+    return ('  <nav class="toc" aria-label="On this page">\n'
+            '    <h2>On this page</h2>\n    <ul>\n' + items + '\n    </ul>\n  </nav>')
 
 
 def third_party_loader():
@@ -381,7 +516,31 @@ def third_party_loader():
 
 
 def structured_data(page, url, faqs):
-    graph = [{
+    home = not page['path']
+    org_id, site_id = SITE + '#organization', SITE + '#website'
+    image = {'@type': 'ImageObject', 'url': SITE + 'og-image.png', 'width': 1200, 'height': 630}
+    org = {
+        '@type': 'Organization',
+        '@id': org_id,
+        'name': 'Click the Pair',
+        'url': SITE,
+        'logo': {'@type': 'ImageObject', 'url': SITE + 'icons/icon-512.png', 'width': 512, 'height': 512},
+    }
+    if CONTACT_EMAIL:
+        org['email'] = CONTACT_EMAIL
+    webpage = {
+        '@type': 'WebPage',
+        '@id': url + '#webpage',
+        'url': url,
+        'name': page['title'],
+        'description': page['description'],
+        'inLanguage': 'en',
+        'isPartOf': {'@id': site_id},
+        'about': {'@id': url + '#game'},
+        'primaryImageOfPage': image,
+        'dateModified': TODAY.isoformat(),
+    }
+    game = {
         '@type': ['VideoGame', 'WebApplication'],
         '@id': url + '#game',
         'name': page['game_name'],
@@ -393,11 +552,45 @@ def structured_data(page, url, faqs):
         'operatingSystem': 'Any',
         'gamePlatform': 'Web browser',
         'playMode': 'SinglePlayer',
+        'timeRequired': 'PT1M',
         'inLanguage': 'en',
         'isAccessibleForFree': True,
+        'publisher': {'@id': org_id},
+        'mainEntityOfPage': {'@id': url + '#webpage'},
         'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD',
                    'availability': 'https://schema.org/InStock'},
-    }]
+    }
+    graph = [
+        org,
+        {'@type': 'WebSite', '@id': site_id, 'url': SITE, 'name': 'Click the Pair',
+         'alternateName': 'ClickThePair', 'inLanguage': 'en', 'publisher': {'@id': org_id},
+         'description': 'A free emoji matching game with a daily challenge, played in the browser.'},
+        webpage,
+        game,
+    ]
+    if home:
+        webpage['datePublished'] = LAUNCHED
+        game['datePublished'] = LAUNCHED
+        boards = [p for p in game_pages() if p['path']]
+        graph.append({
+            '@type': 'ItemList',
+            '@id': url + '#boards',
+            'name': 'Click the Pair game modes and boards',
+            'numberOfItems': len(boards),
+            'itemListElement': [{'@type': 'ListItem', 'position': i, 'name': p['game_name'], 'url': SITE + p['path']}
+                                for i, p in enumerate(boards, 1)],
+        })
+    else:
+        game['isPartOf'] = {'@id': SITE + '#game'}
+        webpage['breadcrumb'] = {'@id': url + '#breadcrumb'}
+        graph.append({
+            '@type': 'BreadcrumbList',
+            '@id': url + '#breadcrumb',
+            'itemListElement': [
+                {'@type': 'ListItem', 'position': 1, 'name': 'Click the Pair', 'item': SITE},
+                {'@type': 'ListItem', 'position': 2, 'name': page['board_name'], 'item': url},
+            ],
+        })
     if faqs:
         graph.append({
             '@type': 'FAQPage',
@@ -530,7 +723,7 @@ def render(page):
     embed = page.get('embed', False)
     url = SITE + page['path']
     cfg['url'] = SITE if embed else url
-    content = '' if embed else read('src/pages/' + page['file']).rstrip('\n')
+    content = '' if embed else page_content(page)
     faqs = faq_pairs(content)
 
     head = ['<!DOCTYPE html>',
@@ -545,7 +738,8 @@ def render(page):
     head += ['',
              f'<title>{E(page["title"])}</title>',
              f'<meta name="description" content="{E(page["description"])}">',
-             '<meta name="robots" content="' + ('noindex, follow' if embed else 'index, follow') + '">']
+             '<meta name="robots" content="' + ('noindex, follow' if embed else
+                                                'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1') + '">']
     if not embed:
         head.append(f'<link rel="canonical" href="{url}">')
     head += ['',
@@ -557,6 +751,7 @@ def render(page):
         head += ['',
                  '<!-- Open Graph -->',
                  '<meta property="og:type" content="website">',
+                 '<meta property="og:locale" content="en_US">',
                  '<meta property="og:site_name" content="Click the Pair">',
                  f'<meta property="og:title" content="{E(og_title)}">',
                  f'<meta property="og:description" content="{E(og_desc)}">',
@@ -596,14 +791,23 @@ def render(page):
         body += ['<header class="site-header">',
                  f'  <h1>{E(page["h1"])}</h1>',
                  f'  <p class="tagline">{E(page["tagline"])}</p>',
-                 '</header>', '', '<main>', '', game_section(page), '', modes_nav(page), '',
-                 '  <article class="content">', '', fold_sections(content), '', '  </article>', '</main>', '',
+                 '</header>', '', '<main>', '', game_section(page), '', modes_nav(page), '']
+        contents = toc(content)
+        if contents:
+            body += [contents, '']
+        home = '' if not page['path'] else '/'
+        body += ['  <article class="content">', '', fold_sections(content), '', '  </article>', '</main>', '',
                  '<footer class="site-footer">',
                  '  <nav aria-label="Footer">',
+                 f'    <a href="{home}#how-to-play">How to Play</a>',
+                 f'    <a href="{home}#boards">Game Modes</a>',
+                 f'    <a href="{home}#faq">FAQ</a>',
+                 f'    <a href="{home}#about">About</a>',
                  '    <a href="/privacy.html">Privacy Policy</a>',
                  '    <a href="/terms.html">Terms</a>',
                  '  </nav>',
                  '  <p>© Click the Pair. Free emoji matching game.</p>',
+                 f'  <p class="site-footer__updated">Page updated <time datetime="{TODAY.isoformat()}">{TODAY_TEXT}</time></p>',
                  '</footer>']
     body += ['', STATS_DIALOG, '',
              '<script type="application/json" id="game-config">' + json.dumps(cfg, ensure_ascii=False) + '</script>',
@@ -660,13 +864,19 @@ self.addEventListener('fetch', event => {{
 '''
 
 
+def stated_date(rel):
+    """The 'Last updated: November 11, 2026' date printed on a hand-edited page."""
+    m = re.search(r'Last updated: (\w+ \d{1,2}, \d{4})', read(rel))
+    return datetime.datetime.strptime(m.group(1), '%B %d, %Y').date().isoformat() if m else TODAY.isoformat()
+
+
 def sitemap(paths):
-    today = datetime.date.today().isoformat()
     rows = []
     for path, freq, prio in paths:
+        lastmod = stated_date(path) if path in ('privacy.html', 'terms.html') else TODAY.isoformat()
         rows.append(f'''  <url>
     <loc>{SITE}{path}</loc>
-    <lastmod>{today}</lastmod>
+    <lastmod>{lastmod}</lastmod>
     <changefreq>{freq}</changefreq>
     <priority>{prio}</priority>
   </url>''')

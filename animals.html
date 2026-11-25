@@ -39,7 +39,7 @@
 
 <title>Animal Emoji Matching Game | Click the Pair</title>
 <meta name="description" content="Find the matching pair on a board full of animal emojis: pandas, foxes, owls and more. A free 60-second animal matching game, no download needed.">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="https://clickthepair.com/animals.html">
 
 <meta name="theme-color" content="#f6f1e7" media="(prefers-color-scheme: light)">
@@ -47,6 +47,7 @@
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Click the Pair">
 <meta property="og:title" content="Animal Emoji Matching Game">
 <meta property="og:description" content="Find the matching pair on a board full of animal emojis: pandas, foxes, owls and more. A free 60-second animal matching game, no download needed.">
@@ -575,12 +576,96 @@ h1 {
 .embed-footer { margin: 10px 0 12px; text-align: center; font-size: .8125rem; color: var(--muted); }
 .is-embed .hint { display: none; }
 .is-embed .game-links { padding-top: 6px; }
+
+/* ---------- On this page (long pages only) ---------- */
+.toc { max-width: 720px; margin: 44px auto 0; padding: 0 20px; }
+.toc h2 { margin: 0 0 10px; font: 800 1.0625rem/1.3 var(--font-display); }
+.toc ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.toc a {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 6px 14px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink);
+  font-size: .875rem; font-weight: 700; text-decoration: none;
+}
+@media (hover: hover) { .toc a:hover { border-color: var(--accent); color: var(--accent); } }
+.toc + .content { margin-top: 24px; }
+.content section { scroll-margin-top: 12px; }
+
+/* ---------- Tables in the text sections ---------- */
+.content .table-wrap { margin: 0 0 1em; overflow-x: auto; }
+.content table { width: 100%; border-collapse: collapse; font-size: .9375rem; line-height: 1.45; }
+.content th, .content td { padding: 9px 14px 9px 0; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.content th:last-child, .content td:last-child { padding-right: 0; }
+.content th { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.content tbody tr:last-child td { border-bottom: 0; }
+.content td.emoji { min-width: 5.25rem; font-family: var(--font-emoji); font-size: 1.5rem; line-height: 1.3; }
+.site-footer__updated { font-size: .8125rem; }
+.content td:first-child { white-space: nowrap; }
+.content #faq + section { margin-top: 20px; }
+.content td:last-child { min-width: 11rem; }
+/* Narrow screens: the look-alike table becomes a list, one group per block */
+@media (max-width: 599px) {
+  .content table.stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .content table.stack, .content table.stack tbody, .content table.stack tr, .content table.stack td { display: block; }
+  .content table.stack tr { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .content table.stack tbody tr:last-child { border-bottom: 0; }
+  .content table.stack td { min-width: 0; padding: 0; border: 0; }
+  .content table.stack td:nth-child(2) { margin-bottom: 2px; font-size: .8125rem; font-weight: 700; color: var(--muted); }
+}
 </style>
 
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://clickthepair.com/#organization",
+      "name": "Click the Pair",
+      "url": "https://clickthepair.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://clickthepair.com/icons/icon-512.png",
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://clickthepair.com/#website",
+      "url": "https://clickthepair.com/",
+      "name": "Click the Pair",
+      "alternateName": "ClickThePair",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://clickthepair.com/#organization"
+      },
+      "description": "A free emoji matching game with a daily challenge, played in the browser."
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://clickthepair.com/animals.html#webpage",
+      "url": "https://clickthepair.com/animals.html",
+      "name": "Animal Emoji Matching Game | Click the Pair",
+      "description": "Find the matching pair on a board full of animal emojis: pandas, foxes, owls and more. A free 60-second animal matching game, no download needed.",
+      "inLanguage": "en",
+      "isPartOf": {
+        "@id": "https://clickthepair.com/#website"
+      },
+      "about": {
+        "@id": "https://clickthepair.com/animals.html#game"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://clickthepair.com/og-image.png",
+        "width": 1200,
+        "height": 630
+      },
+      "dateModified": "2026-11-24",
+      "breadcrumb": {
+        "@id": "https://clickthepair.com/animals.html#breadcrumb"
+      }
+    },
     {
       "@type": [
         "VideoGame",
@@ -596,14 +681,42 @@ h1 {
       "operatingSystem": "Any",
       "gamePlatform": "Web browser",
       "playMode": "SinglePlayer",
+      "timeRequired": "PT1M",
       "inLanguage": "en",
       "isAccessibleForFree": true,
+      "publisher": {
+        "@id": "https://clickthepair.com/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://clickthepair.com/animals.html#webpage"
+      },
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock"
+      },
+      "isPartOf": {
+        "@id": "https://clickthepair.com/#game"
       }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://clickthepair.com/animals.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Click the Pair",
+          "item": "https://clickthepair.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Animals",
+          "item": "https://clickthepair.com/animals.html"
+        }
+      ]
     },
     {
       "@type": "FAQPage",
@@ -741,7 +854,7 @@ h1 {
   <article class="content">
 
     <section id="how-to-play">
-      <details class="fold">
+      <details class="fold" open>
         <summary><h2>How the Animal Board Works</h2></summary>
         <div class="fold__body">
         <p>Every tile on this board is an animal. You will meet a dog and a cat, a fox and a frog, a panda, a pig, a cow and a penguin, plus an octopus, a butterfly, a turtle, a bee, a unicorn, an elephant, a giraffe, a whale, a crab and an owl. Twelve of them appear on each board, and exactly two are the same animal. Click both to score, and a new board appears.</p>
@@ -751,7 +864,7 @@ h1 {
     </section>
 
     <section id="tips">
-      <details class="fold">
+      <details class="fold" open>
         <summary><h2>Tips for the Animal Board</h2></summary>
         <div class="fold__body">
         <ul>
@@ -777,15 +890,32 @@ h1 {
       </details>
     </section>
 
+    <section id="more-boards">
+      <details class="fold" open>
+        <summary><h2>More Click the Pair Boards</h2></summary>
+        <div class="fold__body">
+        <p>This is one of 14 Click the Pair boards. They all use the same rule, one matching pair and 60 seconds, with different tiles.</p>
+        <p><strong>Everyday boards:</strong> <a href="/">Classic</a>, <a href="/hard.html">Hard Mode</a>, <a href="/easy.html">Easy Mode</a>, <a href="/food.html">Food</a>, <a href="/sports.html">Sports &amp; Games</a>.</p>
+        <p><strong>Holiday boards:</strong> <a href="/new-years.html">New Year&#x27;s</a>, <a href="/valentines-day.html">Valentine&#x27;s Day</a>, <a href="/st-patricks-day.html">St. Patrick&#x27;s Day</a>, <a href="/easter.html">Easter</a>, <a href="/fourth-of-july.html">Fourth of July</a>, <a href="/halloween.html">Halloween</a>, <a href="/thanksgiving.html">Thanksgiving</a>, <a href="/christmas.html">Christmas</a>.</p>
+        <p>For the full rules, scoring and tips, see <a href="/#how-to-play">how to play Click the Pair</a>.</p>
+        </div>
+      </details>
+    </section>
+
   </article>
 </main>
 
 <footer class="site-footer">
   <nav aria-label="Footer">
+    <a href="/#how-to-play">How to Play</a>
+    <a href="/#boards">Game Modes</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/#about">About</a>
     <a href="/privacy.html">Privacy Policy</a>
     <a href="/terms.html">Terms</a>
   </nav>
   <p>© Click the Pair. Free emoji matching game.</p>
+  <p class="site-footer__updated">Page updated <time datetime="2026-11-24">November 24, 2026</time></p>
 </footer>
 
 <dialog class="stats" id="stats" aria-labelledby="stats-title">
